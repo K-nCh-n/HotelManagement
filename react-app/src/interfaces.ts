@@ -22,3 +22,8 @@ export interface ISearchParams {
     numberOfRoomsLower ?: number,
     numberOfRoomsUpper ?: number, 
   }
+
+export interface IUserLogin {
+  email: string,
+  password: string
+}
