@@ -2,10 +2,10 @@ import { Pool } from 'pg';
 import { ISearchParams } from './interfaces';
 
 const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'hotel_management',
-  password: 'admin',
+  user: process.env.POSTGRES_USER,
+  database: process.env.DATABASE,
+  password: process.env.PASSWORD,
+  host: "localhost",
   port: 5432,
 });
 

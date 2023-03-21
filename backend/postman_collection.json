@@ -1,0 +1,69 @@
+{
+	"info": {
+		"_postman_id": "93837248-4dd0-474d-9c48-169b80c3d71b",
+		"name": "CSI2532Proj",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25806957"
+	},
+	"item": [
+		{
+			"name": "add",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"searchParams\": {\r\n        \"reservationStartDate\": \"Tue Feb 05 2023 12:05:22 GMT+0400 (IST)\",\r\n        \"reservationEndDate\": \"Tue Feb 05 2023 12:05:22 GMT+0400 (IST)\",\r\n        \"bookingStartDate\": \"Tue Feb 05 2023 12:05:22 GMT+0400 (IST)\",\r\n        \"bookingEndDate\": \"Tue Feb 05 2023 12:05:22 GMT+0400 (IST)\",\r\n        \"areaLower\": 3, \r\n        \"areaUpper\": 4,\r\n        \"priceLower\": 5,\r\n        \"priceUpper\": 6,\r\n        \"capacity\": 1,\r\n        \"chain\": \"HotelChain\",\r\n        \"category\": 2,\r\n        \"numberOfRoomsLower\": 7, \r\n        \"numberOfRoomsUpper\": 8\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "search",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/search",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"search"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
