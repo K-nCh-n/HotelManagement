@@ -2,7 +2,7 @@ import { Navbar, Container, Image, Nav } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import logo from "../assets/logo.svg";
 
-const NavigationBar = () => {
+const NavigationBar = (props: {token: string}) => {
   return (
     <Navbar className="navbar-dark" bg="dark" expand="lg">
       <Container>
@@ -23,7 +23,9 @@ const NavigationBar = () => {
             </Nav.Item>
           </Nav>
         </Navbar.Collapse>
-        <NavLink to="/login" className="btn btn-success">Login</NavLink>
+        {props.token ?
+          <NavLink to="/account" className="btn btn-success">MyAccount</NavLink> :
+          <NavLink to="/login" className="btn btn-success">Login</NavLink>}
       </Container>
     </Navbar>
   );
