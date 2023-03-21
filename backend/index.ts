@@ -1,3 +1,5 @@
+import * as dotenv from 'dotenv';
+dotenv.config(); 
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import { ISearchParams } from './interfaces';
@@ -18,10 +20,14 @@ app.post('/add', (req: Request, res: Response) => {
 });
 
 app.get('/search', async (req: Request, res: Response) => {
-  const { searchParams }: { searchParams: ISearchParams } = req.body;
-  console.log(searchParams);
-  const query = await search(searchParams);
-  res.send();
+  try{
+    const { searchParams }: { searchParams: ISearchParams } = req.body;
+    console.log(searchParams);
+    const query = await search(searchParams);
+    res.send(query.rows);
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 app.listen(port, () => {
