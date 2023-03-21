@@ -2,32 +2,9 @@ import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import React, { useState } from "react";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import axios from "axios";
+import { ISearchParams } from "../interfaces";
 
-const Client = () => {
-  interface ISearchParams {
-    // Booking Info
-    // les dates (début, fin) de réservationou de location
-    reservationStartDate?: Date,
-    reservationEndDate?: Date,
-    bookingStartDate?: Date,
-    bookingEndDate?: Date,
-
-    // Room Info
-    //  la superficie
-    areaLower?: number, 
-    areaUpper?: number,
-    //le prix des chambres
-    priceLower?: number 
-    priceUpper?: number
-    capacity?: number, // la capacité des chambres
-
-    // Hotel Info    
-    chain?: string, // la chaîne hôtelière
-    category?: number, // la catégorie (rating 1-5)
-    // le nombre total de chambres dans l’hôtel
-    numberOfRoomsLower?: number, 
-    numberOfRoomsUpper?: number, 
-  }
+const Search = () => {
   const searchUrl = "http://localhost:5000/search";
   const [searchParams, setSearchParams] = useState<ISearchParams>();
   const [validated, setValidated] = useState(false);
@@ -56,7 +33,7 @@ const Client = () => {
     });
   };
   return (
-    <Container fluid="xxl" className="my-2 py-2 bg-light" id="background-container">
+    <Container fluid="xxl" className="my-2 py-2 bg-light">
       <h2 className="fw-bold pt-2 text-center">Room Search</h2>
       <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <h4>Hotel Information</h4>
@@ -205,4 +182,4 @@ const Client = () => {
   );
 }
 
-export default Client
+export default Search

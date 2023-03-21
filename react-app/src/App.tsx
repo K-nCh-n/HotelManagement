@@ -3,8 +3,9 @@ import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import NavigationBar from './components/NavigationBar';
 import Home from './pages/Home';
-import Client from './pages/Client';
+import Search from './pages/Search';
 import Employee from './pages/Employee';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
@@ -14,8 +15,9 @@ function App() {
         <div>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/client" element={<Client />} />
+            <Route path="/search" element={<Search />} />
             <Route path="/employee" element={<Employee />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
       </div>

@@ -19,10 +19,7 @@ const NavigationBar = () => {
               <NavLink to="/" className={({ isActive }) => 'nav-link ' + (isActive && 'active')}>Home</NavLink>
             </Nav.Item>
             <Nav.Item className="px-2">
-              <NavLink to="/client" className={({ isActive }) => 'nav-link ' + (isActive && 'active')}>Client</NavLink>
-            </Nav.Item>
-            <Nav.Item className="px-2">
-              <NavLink to="/employee" className={({ isActive }) => 'nav-link ' + (isActive && 'active')}>Employee</NavLink>
+              <NavLink to="/search" className={({ isActive }) => 'nav-link ' + (isActive && 'active')}>Search</NavLink>
             </Nav.Item>
           </Nav>
         </Navbar.Collapse>
