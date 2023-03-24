@@ -5,6 +5,7 @@ import NavigationBar from './components/NavigationBar';
 import Home from './pages/Home';
 import Search from './pages/Search';
 import Login from './pages/Login';
+import Account from './pages/Account';
 import Employee from './pages/Employee';
 import NotFound from './pages/NotFound';
 import useToken from './components/Token';
@@ -21,6 +22,7 @@ function App() {
             <Route path="/search" element={<Search />} />
             <Route path="/employee" element={<Employee />} />
             <Route path="/login" element={<Login setToken={setToken} />} />
+            <Route path="/account" element={<Account />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
