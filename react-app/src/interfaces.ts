@@ -27,3 +27,21 @@ export interface IUserLogin {
   email: string,
   password: string
 }
+
+export interface IUserInfo {
+  email: string,
+  firstName: string,
+  lastName: string,
+  address: string,
+  password: string,
+}
+
+export interface IReservation {
+  reservationId: string,
+  roomId: string,
+  customerNas: string,
+  reservationStartDate: String,
+  reservationEndDate: String,
+  reservationDate: String,
+  guests: number,
+}
