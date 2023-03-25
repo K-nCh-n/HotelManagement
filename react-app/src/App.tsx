@@ -7,6 +7,7 @@ import Search from './pages/Search';
 import Login from './pages/Login';
 import Account from './pages/Account';
 import Employee from './pages/Employee';
+import RoomDetails from './pages/RoomDetails';
 import NotFound from './pages/NotFound';
 import useToken from './components/Token';
 
@@ -23,6 +24,7 @@ function App() {
             <Route path="/employee" element={<Employee />} />
             <Route path="/login" element={<Login setToken={setToken} />} />
             <Route path="/account" element={<Account />} />
+            <Route path="/room/:id" element={<RoomDetails />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
