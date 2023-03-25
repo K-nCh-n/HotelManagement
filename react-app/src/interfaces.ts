@@ -23,6 +23,22 @@ export interface ISearchParams {
   numberOfRoomsUpper ?: number, 
 }
 
+export interface IRoomAugmented {
+  roomId: number,
+  hotelId: number,
+  price: number,
+  commodities: string,
+  capacity: number,
+  view: string,
+  extendable: boolean,
+  problems: string,
+  hotelName: string,
+  hotelAddress: string,
+  hotelRating: number,
+  hotelChain: string,
+  hotelPhoneNumber: string,
+}
+
 export interface IUserLogin {
   email: string,
   password: string
