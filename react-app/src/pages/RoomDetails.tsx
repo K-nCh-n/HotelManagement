@@ -1,17 +1,19 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { IRoomAugmented } from '../interfaces';
 
-const RoomDetails = () => {
+const RoomDetails = (props: {token: string}) => {
   const { id } = useParams<{ id: string }>();
   const [room, setRoom] = useState<IRoomAugmented>({} as IRoomAugmented);
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
 
   const [validated, setValidated] = useState(false);
-  const reserveUrl = "http://localhost:5000/reserve";
+  const reserveUrl = "http://localhost:5000/reserveRoom";
+
+  const navigate = useNavigate();
 
   const handleSubmit = (event: any) => {
     const form = event.currentTarget;
@@ -19,20 +21,32 @@ const RoomDetails = () => {
       event.preventDefault();
       event.stopPropagation();
     } else {
-      console.log(checkIn, checkOut);
-      event.preventDefault();
+      if (props.token === undefined) {
+        alert("Please log in to reserve a room.");
+        event.preventDefault();
+        navigate('/login');
+      } else{
+        console.log(checkIn, checkOut);
+        event.preventDefault();
+      }
     }
 
     setValidated(true);
 
     const body = {
+      "roomId": room.roomId,
+      "customerNas": props.token,
       "reservationStartDate": checkIn,
       "reservationEndDate": checkOut,
     };
 
-    axios.post(reserveUrl, body).then(response => {
-      console.log(response);
-    });
+    try{
+      axios.post(reserveUrl, body).then(response => {
+        console.log(response);
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleChange = (event: any) => {
@@ -45,7 +59,7 @@ const RoomDetails = () => {
   };
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/rooms/${id}`).then(response => {
+    axios.get(`http://localhost:5000/room/${id}`).then(response => {
       setRoom(response.data);
     });
   }, []);

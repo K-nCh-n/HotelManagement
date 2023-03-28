@@ -1,8 +1,15 @@
-import { Navbar, Container, Image, Nav } from "react-bootstrap";
+import { Navbar, Container, Image, Nav, Button } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import logo from "../assets/logo.svg";
+import { GoSignOut } from "react-icons/go";
+import { MdManageAccounts } from "react-icons/md";
 
 const NavigationBar = (props: {token: string}) => {
+  const logOut = () => {
+    localStorage.removeItem("isEmployee");
+    localStorage.removeItem("token");
+    window.location.reload();
+  }
   return (
     <Navbar className="navbar-dark" bg="dark" expand="lg">
       <Container>
@@ -22,10 +29,17 @@ const NavigationBar = (props: {token: string}) => {
               <NavLink to="/search" className={({ isActive }) => 'nav-link ' + (isActive && 'active')}>Search</NavLink>
             </Nav.Item>
           </Nav>
+          <Nav className="ms-auto">
+            {props.token ?
+              <Nav.Item>
+                <NavLink to="/account" className="btn btn-success" title="My Account"><MdManageAccounts size={20} /></NavLink>
+                <Button className="btn" title="Log Out" onClick={logOut}><GoSignOut size={20} /></Button>
+              </Nav.Item> :
+              <Nav.Item>
+                <NavLink to="/login" className="btn btn-success">Login</NavLink>
+              </Nav.Item>}
+          </Nav>
         </Navbar.Collapse>
-        {props.token ?
-          <NavLink to="/account" className="btn btn-success">MyAccount</NavLink> :
-          <NavLink to="/login" className="btn btn-success">Login</NavLink>}
       </Container>
     </Navbar>
   );

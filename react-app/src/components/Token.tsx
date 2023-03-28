@@ -13,8 +13,22 @@ export default function useToken() {
     localStorage.setItem('token', JSON.stringify({"token": token}));
   };
 
+  const checkEmployee = () => {
+    const tokenString = localStorage.getItem('isEmployee');
+    const empToken = tokenString !== null && JSON.parse(tokenString);
+    return empToken?.isEmployee
+  };
+  const [isEmployee, setIsEmployee] = useState(checkEmployee());
+  const saveEmployee = (val: boolean) => {
+    setIsEmployee(val);
+    localStorage.setItem('isEmployee', JSON.stringify({"isEmployee": val}));
+  };
+
+
   return {
     token,
     setToken: saveToken,
+    isEmployee,
+    setIsEmployee: saveEmployee
   }
 }

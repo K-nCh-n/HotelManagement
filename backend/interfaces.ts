@@ -22,3 +22,48 @@ export interface ISearchParams {
   numberOfRoomsLower?: number,
   numberOfRoomsUpper?: number,
 }
+
+export interface IRoomAugmented {
+  roomId: number,
+  hotelId: number,
+  price: number,
+  commodities: string,
+  capacity: number,
+  view: string,
+  extendable: boolean,
+  problems: string,
+  hotelName: string,
+  hotelAddress: string,
+  hotelRating: number,
+  hotelChain: string,
+  hotelPhoneNumber: string,
+}
+
+export interface IUserLogin {
+  email: string,
+  password: string
+}
+
+export interface IUserInfo {
+  customerNas: string,
+  email: string,
+  firstName: string,
+  lastName: string,
+  address: string,
+  password: string,
+}
+
+export interface IReservation {
+  reservationId: string,
+  roomId: string,
+  customerNas: string,
+  reservationStartDate: String,
+  reservationEndDate: String,
+  reservationDate: String,
+  guests: number,
+}
+
+export interface IReservationAugmented extends IReservation {
+  chainName: string,
+  clientName: string,
+}
