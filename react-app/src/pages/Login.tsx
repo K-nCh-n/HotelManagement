@@ -3,11 +3,13 @@ import { Container, Form, Button, Row, Col, Image } from 'react-bootstrap';
 import backgroundHome from '../assets/backgroundHome.jpg';
 import { IUserLogin } from "../interfaces";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const Login = (props: { setToken: (token: string ) => void } ) => {
+const Login = (props: { setToken: (token: string ) => void, setIsEmployee: (val: boolean) => void } ) => {
   const [validated, setValidated] = useState(false);
   const [userLogin, setUserLogin] = useState<IUserLogin>({} as IUserLogin );
   const loginUrl = "http://localhost:5000/login";
+  const navigate = useNavigate();
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
@@ -25,7 +27,14 @@ const Login = (props: { setToken: (token: string ) => void } ) => {
     };
 
     axios.post(loginUrl, body).then(response => {
+      console.log(response.data);
       props.setToken(response.data.token);
+      if (response.data.isEmployee) {
+        props.setIsEmployee(true);
+        navigate('/employee');
+      } else {
+        navigate(-1);
+      }
     });
   };
 

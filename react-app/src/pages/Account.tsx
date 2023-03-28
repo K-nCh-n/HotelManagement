@@ -6,32 +6,35 @@ import axios from "axios";
 import { IReservation, IUserInfo } from "../interfaces";
 import ReservationList from "../components/ReservationsList";
 
-const Account = () => {
+const Account = (props: {token: string}) => {
   const [userInfo, setUserInfo] = useState<IUserInfo>({} as IUserInfo);
   const [reservations, setReservations] = useState<IReservation[]>([]);
 
   useEffect(() => {
     const getDBInfo = () => {
       let ignore = false;
-      const userInfoUrl = "http://localhost:5000/account";
-      const reservationUrl = "http://localhost:5000/reservations";
-      try {
-        axios.get(userInfoUrl).then(response => {
-          if (!ignore) {setUserInfo(response.data);}
-        });
-        axios.get(reservationUrl).then(response => {
-          if (!ignore) {
+      const userInfoUrl = `http://localhost:5000/account/${props.token}`;
+      const reservationUrl = `http://localhost:5000/userReservations/${props.token}`;
+      if (!ignore) {
+        try {
+          axios.get(userInfoUrl).then(response => {
+            setUserInfo(response.data);
+          });
+          axios.get(reservationUrl).then(response => {
             setReservations(response.data);
-            console.log(reservations)
-          }
-        });
-      } catch (error) {
-        console.log(error);
+          });
+        } catch (error) {
+          console.log(error);
+        }
       }
       return () => { ignore = true; };
     }
     getDBInfo();
-  }, [reservations]);
+  }, []);
+
+  const editUserInfo = () => {
+    alert("Coming Soon: Edit user info. Please contact an administrator if you need to change your information.");
+  }
 
   const fillInUserInfo = () => {
     if (userInfo.firstName !== undefined) {
@@ -40,7 +43,7 @@ const Account = () => {
           <p>Name: {userInfo.firstName} {userInfo.lastName}</p>
           <p>Email: {userInfo.email}</p>
           <p>Password: {"*".repeat(userInfo.password.length)}</p>
-          <Button className="btn btn-secondary"><AiOutlineEdit /></Button>
+          <Button className="btn btn-secondary" onClick={editUserInfo}><AiOutlineEdit /></Button>
         </div>
       );
     }

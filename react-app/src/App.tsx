@@ -12,19 +12,19 @@ import NotFound from './pages/NotFound';
 import useToken from './components/Token';
 
 function App() {
-  const { token, setToken } = useToken();
+  const { token, setToken, isEmployee, setIsEmployee } = useToken();
   return (
     <Router>
       <div>
         <NavigationBar token={token} />
         <div>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home isEmployee={isEmployee} />} />
             <Route path="/search" element={<Search />} />
-            <Route path="/employee" element={<Employee />} />
-            <Route path="/login" element={<Login setToken={setToken} />} />
-            <Route path="/account" element={<Account />} />
-            <Route path="/room/:id" element={<RoomDetails />} />
+            <Route path="/employee" element={<Employee isEmployee={isEmployee} />} />
+            <Route path="/login" element={<Login setToken={setToken} setIsEmployee={setIsEmployee} />} />
+            <Route path="/account" element={<Account token={token} />} />
+            <Route path="/room/:id" element={<RoomDetails token={token} />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>

@@ -1,5 +1,5 @@
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import axios from "axios";
@@ -12,6 +12,24 @@ const Search = () => {
   const [validated, setValidated] = useState(false);
   const [searchResults, setSearchResults] = useState<IRoomAugmented[]>([]);
   const [showSearchFields, setShowSearchFields] = useState(true);
+
+  useEffect(() => {
+    const getDBInfo = () => {
+      let ignore = false;
+      try {
+        axios.get(searchUrl).then(response => {
+          if (!ignore) {
+            setSearchResults(response.data);
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      return () => { ignore = true; };
+    }
+    getDBInfo();
+  }, []);
+
   const handleChange = (event: any) => {
     const { name, value } = event.target;
     setSearchParams({ ...searchParams, [name]: value })
@@ -28,11 +46,7 @@ const Search = () => {
 
     setValidated(true);
 
-    const body = {
-      "searchParams": searchParams,
-    };
-
-    axios.post(searchUrl, body).then(response => {
+    axios.get(searchUrl, { params: {searchParams} }).then(response => {
       console.log(response);
       setSearchResults(response.data);
       setShowSearchFields(false);
@@ -50,19 +64,19 @@ const Search = () => {
       </Row>
       {showSearchFields && (
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
-          <h4>Hotel Information</h4>
-          <Row className="my-3 px-2 justify-content-around">
+          <h5>Hotel Information</h5>
+          <Row className="my-1 px-2 justify-content-around">
             <Col md='5'>
               <Row>
                 <Col md='6'>
                   <Form.Group>
-                    <Form.Label>Hotel Chain</Form.Label>
+                    <Form.Label className="my-0">Hotel Chain</Form.Label>
                     <Form.Control name="chain" type="text" placeholder="Enter Hotel Chain Name" onChange={handleChange} />
                   </Form.Group>
                 </Col>
                 <Col md='6'>
                   <Form.Group>
-                    <Form.Label>Hotel Rating</Form.Label>
+                    <Form.Label className="my-0">Hotel Rating</Form.Label>
                     <Form.Select name="capacity" defaultValue={""} onChange={handleChange}>
                       <option disabled></option>
                       <option>1</option>
@@ -76,8 +90,8 @@ const Search = () => {
               </Row>
             </Col>
             <Col md='5'>
-              <Row>
-                <h5 className="px-1">Number of Rooms</h5>
+              <Row className="text-center">
+                <h6 className="px-1">Number of Rooms</h6>
                 <Col>
                   <Form.Group>
                     <Form.Control name="numberOfRoomsLower" type="number" placeholder="" onChange={handleChange} />
@@ -93,11 +107,11 @@ const Search = () => {
             </Col>
           </Row>
 
-          <h4>Room Information</h4>
-          <Row className="my-3 px-2 justify-content-around">
+          <h5>Room Information</h5>
+          <Row className="my-1 px-2 justify-content-around">
             <Col md='5'>
-              <Row>
-                <h5 className="px-1">Price</h5>
+              <Row className="text-center">
+                <h6 className="px-1">Room Price</h6>
                 <Col>
                   <Form.Group>
                     <Form.Control name="priceLower" type="text" placeholder="" onChange={handleChange} />
@@ -112,8 +126,8 @@ const Search = () => {
               </Row>
             </Col>
             <Col md='5'>
-              <Row>
-                <h5 className="px-1">Area</h5>
+              <Row className="text-center">
+                <h6 className="px-1">Area of Room</h6>
                 <Col>
                   <Form.Group>
                     <Form.Control name="areaLower" type="number" placeholder="" onChange={handleChange} />
@@ -128,10 +142,10 @@ const Search = () => {
               </Row>
             </Col>
           </Row>
-          <Row className="my-3 px-2 justify-content-around">
+          <Row className="my-1 px-2 justify-content-around">
             <Col md='5'>
               <Form.Group>
-                <Form.Label>Capacity</Form.Label>
+                <Form.Label className="my-0">Capacity</Form.Label>
                 <Form.Select name="capacity" defaultValue={""} onChange={handleChange}>
                   <option disabled></option>
                   <option>1</option>
@@ -147,37 +161,33 @@ const Search = () => {
             </Col>
           </Row>
 
-          <h4>Reservation/Booking Information</h4>
-          <Row className="my-3 px-2 justify-content-around">
-            <Col md='5'>
-              <h5 className="px-1">Reservation</h5>
+          <h5>Reservation/Booking Information</h5>
+          <Row className="my-1 px-2 justify-content-around">
+            <Col md='5' className="text-center">
+              <h6 className="px-1">Reservation Date</h6>
               <Row>
                 <Col xs='6'>
-                  <Form.Group className="my-3">
-                    <Form.Label>Start Date</Form.Label>
+                  <Form.Group className="my-1">
                     <Form.Control name="reservationStartDate" type="date" placeholder="Date" onChange={handleChange} />
                   </Form.Group>
                 </Col>
                 <Col xs='6'>
-                  <Form.Group className="my-3">
-                    <Form.Label>End Date</Form.Label>
+                  <Form.Group className="my-1">
                     <Form.Control name="reservationEndDate" type="date" placeholder="Date" onChange={handleChange} />
                   </Form.Group>
                 </Col>
               </Row>
             </Col>
-            <Col md='5'>
-              <h5 className="px-1">Booking</h5>
+            <Col md='5' className="text-center">
+              <h6 className="px-1">Booking Date</h6>
               <Row>
                 <Col xs='6'>
-                  <Form.Group className="my-3">
-                    <Form.Label>Start Date</Form.Label>
+                  <Form.Group className="my-1">
                     <Form.Control name="bookingStartDate" type="date" placeholder="Date" onChange={handleChange} />
                   </Form.Group>
                 </Col>
                 <Col xs='6'>
-                  <Form.Group className="my-3">
-                    <Form.Label>End Date</Form.Label>
+                  <Form.Group className="my-1">
                     <Form.Control name="bookingEndDate" type="date" placeholder="Date" onChange={handleChange} />
                   </Form.Group>
                 </Col>
@@ -186,11 +196,12 @@ const Search = () => {
           </Row>
 
           <Form.Group>
-            <Button variant="primary" type="submit">
+            <Button variant="primary" type="submit" className="mx-2">
               Search
               <AiOutlineSearch className="mx-1" />
             </Button>
           </Form.Group>
+          <hr />
         </Form>
       )}
       <SearchResults searchResults={searchResults} />
