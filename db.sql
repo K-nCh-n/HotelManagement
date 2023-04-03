@@ -46,6 +46,8 @@ CREATE TABLE employee (
     first_name character varying(20),
     last_name character varying(20),
     address character varying(20),
+    email varchar,
+    password varchar,
     PRIMARY KEY (employee_nas),
     FOREIGN KEY (hotel_id) REFERENCES hotel(hotel_id)
 );
@@ -55,7 +57,9 @@ CREATE TABLE customer (
     first_name character varying(20),
     last_name character varying(20),
     address character varying(60),
-    registrationdate date,
+    registration_date date,
+    email varchar,
+    password varchar,
     PRIMARY KEY (customer_nas)
 );
 

@@ -2,8 +2,8 @@ import * as dotenv from 'dotenv';
 dotenv.config(); 
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
-import { ISearchParams, IUserInfo, IReservationAugmented, IReservation, IRoomAugmented } from './interfaces';
-import { search } from './db';
+import { ISearchParams, IUserInfo, IReservationAugmented, IReservation, IRoomAugmented, IUserLogin } from './interfaces';
+import { search, createClientAcct, loginUser } from './db';
 
 const app: Express = express();
 const port = 5000;
@@ -14,6 +14,39 @@ app.use(cors());
 app.get('/', (req: Request, res: Response) => {
   res.send('Express + TypeScript Server');
 });
+
+app.post('/signup', async (req: Request, res: Response) => {
+  try {
+    const user: IUserInfo = req.body.clientInfo;
+    await createClientAcct(user);
+    res.status(200).send("Created");
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error Creating Account");
+  }
+});
+
+app.post('/login', async (req: Request, res: Response) => {
+  try {
+    const loginInfo: IUserLogin = req.body.loginInfo;
+    const result = await loginUser(loginInfo.email, loginInfo.password);
+    console.log(result.rows)
+    if (result.rows.length === 0) {
+      res.status(401).send("Invalid Credentials");
+    } else if (result.rows.length > 1) {
+      res.status(500).send("Error Logging In");
+    } else {
+      const isEmployee = result.rows[0].account_type === "employee";
+      const token = result.rows[0].token;
+      res.send({ token, isEmployee });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error Logging In");
+  }
+});
+
+///
 
 app.post('/add', (req: Request, res: Response) => {
   res.send(req.body);
@@ -56,14 +89,7 @@ app.get('/search', async (req: Request, res: Response) => {
   res.send(testResults);
 });
 
-app.post('/login', (req: Request, res: Response) => {
-  res.send(
-    {
-      token: 'test12',
-      isEmployee: true
-    }
-);
-});
+
 
 app.get('/account/:id', (req: Request, res: Response) => {
   const account: IUserInfo = {
@@ -109,9 +135,7 @@ app.delete('/cancelReservation/:id', (req: Request, res: Response) => {
   res.send("Deleted");
 });
 
-app.post('/signup', (req: Request, res: Response) => {
-  res.send("Added");
-});
+
 
 app.post('/editaccountinfo', (req: Request, res: Response) => {
   res.send("Edited");

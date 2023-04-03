@@ -7,8 +7,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { GoSignIn } from "react-icons/go";
 
 const Login = (props: { setToken: (token: string ) => void, setIsEmployee: (val: boolean) => void } ) => {
-  const [validated, setValidated] = useState(false);
   const [userLogin, setUserLogin] = useState<IUserLogin>({} as IUserLogin );
+  const [message, setMessage] = useState<string>("");
   const loginUrl = "http://localhost:5000/login";
   const navigate = useNavigate();
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -17,26 +17,33 @@ const Login = (props: { setToken: (token: string ) => void, setIsEmployee: (val:
       event.preventDefault();
       event.stopPropagation();
     } else {
-      console.log(userLogin);
       event.preventDefault();
     }
-
-    setValidated(true);
 
     const body = {
       "loginInfo": userLogin,
     };
 
-    axios.post(loginUrl, body).then(response => {
-      console.log(response.data);
-      props.setToken(response.data.token);
-      if (response.data.isEmployee) {
-        props.setIsEmployee(true);
-        navigate('/employee');
-      } else {
-        navigate(-1);
-      }
-    });
+    try {
+      axios.post(loginUrl, body)
+      .then(response => {
+        console.log(response.data);
+        props.setToken(response.data.token);
+        if (response.data.isEmployee) {
+          props.setIsEmployee(true);
+          navigate('/employee');
+        } else {
+          navigate(-1);
+        }
+      })
+      .catch(err => {
+        if (err.response.status === 401) {
+          setMessage("Invalid email or password");
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,7 +55,7 @@ const Login = (props: { setToken: (token: string ) => void, setIsEmployee: (val:
     <Container fluid="lg" className="my-2 py-2 bg-light">
       <Row>
         <Col md="4">
-          <Form noValidate validated={validated} onSubmit={handleSubmit}>
+          <Form noValidate onSubmit={handleSubmit}>
             <Form.Group>
               <Form.Label>Email</Form.Label>
               <Form.Control name="email" type="email" placeholder="Enter your email" onChange={handleChange} required />
@@ -63,6 +70,7 @@ const Login = (props: { setToken: (token: string ) => void, setIsEmployee: (val:
                 Please enter a password.
               </Form.Control.Feedback>
             </Form.Group>
+            <p className="text-danger">{message}</p>
             <Link style={{fontSize: "0.8rem"}} to="/signup">Create Account</Link>
             <Form.Group>
               <Button variant="primary rounded-pill px-3 py-2 my-2" type="submit">Sign In <GoSignIn /></Button>
