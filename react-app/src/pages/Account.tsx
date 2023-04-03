@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import { MdAccountCircle } from "react-icons/md";
+import { Container, Row, Col, Card, Button, Modal } from 'react-bootstrap';
+import { MdAccountCircle, MdDeleteForever } from "react-icons/md";
 import { AiOutlineEdit } from "react-icons/ai";
 import axios from "axios";
 import { IReservation, IUserInfo } from "../interfaces";
 import ReservationList from "../components/ReservationsList";
+import { useNavigate } from "react-router-dom";
+import ClientInfo from "../components/ClientInfo";
 
 const Account = (props: {token: string}) => {
   const [userInfo, setUserInfo] = useState<IUserInfo>({} as IUserInfo);
   const [reservations, setReservations] = useState<IReservation[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getDBInfo = () => {
@@ -32,8 +35,19 @@ const Account = (props: {token: string}) => {
     getDBInfo();
   }, []);
 
-  const editUserInfo = () => {
-    alert("Coming Soon: Edit user info. Please contact an administrator if you need to change your information.");
+  const [showEditInfo, setShowEditInfo] = useState(false);
+
+  const [showModal, setShowModal] = useState(false);
+  const handleClose = () => setShowModal(false);
+  const handleShow = () => setShowModal(true);
+
+  const deleteUser = () => {
+    const deleteUrl = `http://localhost:5000/deleteUser/${props.token}`;
+    axios.delete(deleteUrl).then(response => {
+      console.log(response.data);
+      alert("Your account has been deleted.");
+      navigate('/');
+    });
   }
 
   const fillInUserInfo = () => {
@@ -43,7 +57,8 @@ const Account = (props: {token: string}) => {
           <p>Name: {userInfo.firstName} {userInfo.lastName}</p>
           <p>Email: {userInfo.email}</p>
           <p>Password: {"*".repeat(userInfo.password.length)}</p>
-          <Button className="btn btn-secondary" onClick={editUserInfo}><AiOutlineEdit /></Button>
+          <Button className="btn btn-secondary" onClick={() => setShowEditInfo(true)}><AiOutlineEdit /></Button>
+          <Button className="btn btn-danger" onClick={handleShow}>DELETE USER</Button>
         </div>
       );
     }
@@ -51,25 +66,45 @@ const Account = (props: {token: string}) => {
 
   return (
     <Container fluid="lg" className="my-2 py-2 bg-light">
-      <Row>
-        <Col md="4">
-          <Card className="my-2">
-            <MdAccountCircle className="card-img-top" size={150}/>
-            <Card.Body className="text-center">
-              <Card.Title>Account Information</Card.Title>
-              {fillInUserInfo()}
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md="8">
-          <Container>
-            <h3>
-              My Reservations
-            </h3>
-            <ReservationList reservations={reservations} />
-          </Container>
-        </Col>
-      </Row>
+      {showEditInfo ?
+        <ClientInfo user={userInfo} setShowEditInfo={setShowEditInfo} />
+        : 
+        <Container>
+            <Modal show={showModal} onHide={handleClose}>
+              <Modal.Header closeButton>
+                <Modal.Title>Confirm Account Deletion</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>Are you sure you want to delete your account?</Modal.Body>
+              <Modal.Footer>
+                <Button className="btn btn-scondary" onClick={handleClose}>
+                  Cancel
+                </Button>
+                <Button className="btn btn-danger" onClick={deleteUser}>
+                  DELETE ACCOUNT <MdDeleteForever />
+                </Button>
+              </Modal.Footer>
+            </Modal>
+            <Row>
+              <Col md="4">
+                <Card className="my-2">
+                  <MdAccountCircle className="card-img-top" size={150} />
+                  <Card.Body className="text-center">
+                    <Card.Title>Account Information</Card.Title>
+                    {fillInUserInfo()}
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col md="8">
+                <Container>
+                  <h3>
+                    My Reservations
+                  </h3>
+                  <ReservationList reservations={reservations} />
+                </Container>
+              </Col>
+            </Row>
+        </Container>
+      }
     </Container>
   );
 }

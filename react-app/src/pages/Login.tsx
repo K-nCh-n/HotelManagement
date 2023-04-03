@@ -3,7 +3,8 @@ import { Container, Form, Button, Row, Col, Image } from 'react-bootstrap';
 import backgroundHome from '../assets/backgroundHome.jpg';
 import { IUserLogin } from "../interfaces";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { GoSignIn } from "react-icons/go";
 
 const Login = (props: { setToken: (token: string ) => void, setIsEmployee: (val: boolean) => void } ) => {
   const [validated, setValidated] = useState(false);
@@ -62,8 +63,9 @@ const Login = (props: { setToken: (token: string ) => void, setIsEmployee: (val:
                 Please enter a password.
               </Form.Control.Feedback>
             </Form.Group>
+            <Link style={{fontSize: "0.8rem"}} to="/signup">Create Account</Link>
             <Form.Group>
-              <Button variant="primary rounded-pill px-3 py-2 my-2" type="submit">Sign In</Button>
+              <Button variant="primary rounded-pill px-3 py-2 my-2" type="submit">Sign In <GoSignIn /></Button>
             </Form.Group>
           </Form>
         </Col>
