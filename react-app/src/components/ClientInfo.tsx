@@ -17,7 +17,7 @@ const ClientInfo = (props: { user?: IUserInfo, setShowEditInfo?: React.Dispatch<
       event.preventDefault();
       event.stopPropagation();
     } else {
-      console.log(formData);
+      console.log(formData)
       event.preventDefault();
     }
 
