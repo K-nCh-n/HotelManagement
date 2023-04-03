@@ -65,7 +65,7 @@ app.post('/login', (req: Request, res: Response) => {
 );
 });
 
-app.get('/account', (req: Request, res: Response) => {
+app.get('/account/:id', (req: Request, res: Response) => {
   const account: IUserInfo = {
     customerNas: "NAS",
     email: "email@example.com",
@@ -77,7 +77,7 @@ app.get('/account', (req: Request, res: Response) => {
   res.send(account);
 });
 
-app.get('/userReservations', (req: Request, res: Response) => {
+app.get('/userReservations/:id', (req: Request, res: Response) => {
   const testReservations: IReservation[] = [
     {
       "reservationId": "1",
@@ -101,8 +101,20 @@ app.get('/userReservations', (req: Request, res: Response) => {
   res.send(testReservations);
 });
 
-app.delete('/cancelReservation', (req: Request, res: Response) => {
+app.delete('deleteUser/:id', (req: Request, res: Response) => {
   res.send("Deleted");
+});
+
+app.delete('/cancelReservation/:id', (req: Request, res: Response) => {
+  res.send("Deleted");
+});
+
+app.post('/signup', (req: Request, res: Response) => {
+  res.send("Added");
+});
+
+app.post('/editaccountinfo', (req: Request, res: Response) => {
+  res.send("Edited");
 });
 
 app.get('/employeeReservations', (req: Request, res: Response) => {
@@ -137,7 +149,7 @@ app.post('/employeeCreateRental', (req: Request, res: Response) => {
   res.send("Added");
 });
 
-app.get('/room/:id', (req: Request, res: Response) => {
+app.get('/roomInfo/:id', (req: Request, res: Response) => {
   const testRoom: IRoomAugmented = {
     roomId: 1234,
     price: 100,

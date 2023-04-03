@@ -59,7 +59,7 @@ const RoomDetails = (props: {token: string}) => {
   };
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/room/${id}`).then(response => {
+    axios.get(`http://localhost:5000/roomInfo/${id}`).then(response => {
       setRoom(response.data);
     });
   }, []);
