@@ -69,7 +69,7 @@ const RoomDetails = (props: {token: string}) => {
       <Row>
         <Col md="5">
           <Card className="my-2">
-            <Card.Img variant="top" src="https://via.placeholder.com/100" />
+            <Card.Img variant="top" src={room.roomImage} />
             <Card.Body className="text-center">
               <Card.Title>{room.roomId}</Card.Title>
               <Container>

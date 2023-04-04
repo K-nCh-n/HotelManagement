@@ -37,6 +37,7 @@ export interface IRoomAugmented {
   hotelRating: number,
   hotelChain: string,
   hotelPhoneNumber: string,
+  roomImage: string,
 }
 
 export interface IUserLogin {

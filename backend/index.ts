@@ -46,50 +46,37 @@ app.post('/login', async (req: Request, res: Response) => {
   }
 });
 
+app.get('/search', async (req: Request, res: Response) => {
+  const searchParams: ISearchParams = req.query;
+  console.log(searchParams);
+  const result = await search(searchParams);
+  const rooms = result.rows.map((room: any) => {
+    return {
+      roomId: room.room_id,
+      hotelId: room.hotel_id,
+      price: room.price,
+      commodities: room.commodities,
+      capacity: room.capacity,
+      view: room.view,
+      extendable: room.extendable,
+      problems: room.problems,
+      hotelName: room.chain_name + " " + room.zone,
+      hotelAddress: room.address,
+      hotelRating: room.rating,
+      hotelChain: room.chain_name,
+      hotelPhoneNumber: room.phone_number,
+      roomImage: room.image,
+    }
+  });
+  console.log(rooms);
+  res.send(rooms);
+});
+
 ///
 
 app.post('/add', (req: Request, res: Response) => {
   res.send(req.body);
 });
-
-app.get('/search', async (req: Request, res: Response) => {
-  const testResults: IRoomAugmented[] = [
-    {
-      "roomId": 1,
-      "hotelId": 1,
-      "price": 100,
-      "capacity": 2,
-      "extendable": true,
-      "commodities": "TV, Wifi, AC",
-      "view": "City",
-      "problems": "None",
-      "hotelName": "Hotel 1",
-      "hotelAddress": "123 Main St",
-      "hotelPhoneNumber": "123-456-7890",
-      "hotelChain": "Chain 1",
-      "hotelRating": 5
-    },
-    {
-      "roomId": 2,
-      "hotelId": 1,
-      "price": 200,
-      "capacity": 4,
-      "extendable": false,
-      "commodities": "TV, Wifi, AC",
-      "view": "City",
-      "problems": "None",
-      "hotelName": "Hotel 2",
-      "hotelAddress": "123 Main St",
-      "hotelPhoneNumber": "123-456-7890",
-      "hotelChain": "Chain 1",
-      "hotelRating": 5
-    }
-  ];
-  console.log(req.query);
-  res.send(testResults);
-});
-
-
 
 app.get('/account/:id', (req: Request, res: Response) => {
   const account: IUserInfo = {
@@ -188,6 +175,7 @@ app.get('/roomInfo/:id', (req: Request, res: Response) => {
     hotelPhoneNumber: "Hotel Phone Number",
     view: "Seaside",
     problems: "No AC",
+    roomImage: ""
   };
   res.send(testRoom);
 });

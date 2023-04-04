@@ -22,12 +22,14 @@ CREATE TABLE hotel (
     phone_number character varying(20),
     rating smallint,
     manager_id character varying(20),
+    address character varying(60),
+    zone character varying(20),
     PRIMARY KEY (hotel_id),
     FOREIGN KEY (chain_name) REFERENCES hotel_chain(chain_name)
 );
 
 CREATE TABLE room (
-    room_id integer NOT NULL,
+    room_id varchar NOT NULL,
     hotel_id integer NOT NULL,
     price integer,
     commodities character varying(20),
@@ -35,6 +37,7 @@ CREATE TABLE room (
     view character varying(20),
     extendable boolean,
     problems character varying(20),
+    "image" varchar
     PRIMARY KEY (room_id),
     FOREIGN KEY (hotel_id) REFERENCES hotel(hotel_id)
 );
@@ -65,7 +68,7 @@ CREATE TABLE customer (
 
 CREATE TABLE reservation (
     reservation_id character varying(20) NOT NULL,
-    room_id integer NOT NULL,
+    room_id varchar NOT NULL,
     customer_nas character varying(20),
     address character varying(20),
     reservation_start_date date,
@@ -79,7 +82,7 @@ CREATE TABLE rental (
     rental_id character varying(20) NOT NULL,
     reservation_id character varying(20),
     customer_nas character varying(20),
-    room_id integer NOT NULL,
+    room_id varchar NOT NULL,
     rental_start_date date,
     rental_end_date date,
     number_of_people integer,
