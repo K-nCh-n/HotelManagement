@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import ReservationList from '../components/ReservationsList';
-import { IReservation, IReservationAugmented } from '../interfaces';
+import { IReservation, IReservationEmployee } from '../interfaces';
 import { AiOutlineSearch } from "react-icons/ai";
 import axios from 'axios';
 
-const Employee = (props: {isEmployee: boolean}) => {
-  const [reservations, setReservations] = useState<IReservationAugmented[]>([]);
-  const [filteredReservations, setFilteredReservations] = useState<IReservationAugmented[]>([]);
+const Employee = (props: {isEmployee: boolean, employeeNas: string}) => {
+  const [reservations, setReservations] = useState<IReservationEmployee[]>([]);
+  const [filteredReservations, setFilteredReservations] = useState<IReservationEmployee[]>([]);
   const [validated, setValidated] = useState(false);
   const [filters, setFilters] = useState({
     chainName: "",
     clientName: "",
     roomId: "",
-    reservationStartDate: "",
+    reservationDate: "",
   });
 
   useEffect(() => {
@@ -43,11 +43,18 @@ const Employee = (props: {isEmployee: boolean}) => {
   const handleFilterSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setFilteredReservations(reservations.filter(reservation => {
+      const reservationStartDate = new Date(reservation.reservationStartDate);
+      const reservationEndDate = new Date(reservation.reservationEndDate);
+
+      const filterDate = new Date(filters.reservationDate);
+      filterDate.setDate(filterDate.getDate() + 1);
+      filterDate.setHours(0, 0, 0, 0);
       return (
         reservation.chainName.toLowerCase().includes(filters.chainName.toLowerCase()) &&
         reservation.clientName.toLowerCase().includes(filters.clientName.toLowerCase()) &&
         reservation.roomId.toLowerCase().includes(filters.roomId.toLowerCase()) &&
-        reservation.reservationStartDate.toLowerCase().includes(filters.reservationStartDate.toLowerCase())
+        filterDate >= reservationStartDate &&
+        filterDate <= reservationEndDate
       )}));
   };
 
@@ -116,7 +123,8 @@ const Employee = (props: {isEmployee: boolean}) => {
                   </Col>
                 </Row>
               </Form>
-              <ReservationList reservations={filteredReservations} />
+              <hr />
+              <ReservationList reservations={filteredReservations} setReservations={setFilteredReservations} employeeNas={props.employeeNas}/>
             </Container>
           </Col>
           <Col md="6">
