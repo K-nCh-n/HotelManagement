@@ -91,7 +91,7 @@ const ClientInfo = (props: { user?: IUserInfo, setShowEditInfo?: React.Dispatch<
         <Col md="6">
           <Form.Group>
             <Form.Label>Social Insurance Number (SIN/NAS)</Form.Label>
-            <Form.Control name="customerNas" type="text" placeholder="Enter your SIN" defaultValue={props.user?.customerNas} onChange={handleChange} required />
+            <Form.Control name="customerNas" type="text" placeholder="Enter your SIN" defaultValue={props.user?.NAS} onChange={handleChange} required />
             <Form.Control.Feedback type="invalid">
               Please enter a valid NAS.
             </Form.Control.Feedback>
