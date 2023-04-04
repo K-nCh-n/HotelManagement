@@ -76,7 +76,7 @@ const Account = (props: {token: string}) => {
               </Modal.Header>
               <Modal.Body>Are you sure you want to delete your account?</Modal.Body>
               <Modal.Footer>
-                <Button className="btn btn-scondary" onClick={handleClose}>
+                <Button className="btn btn-secondary" onClick={handleClose}>
                   Cancel
                 </Button>
                 <Button className="btn btn-danger" onClick={deleteUser}>
@@ -99,7 +99,7 @@ const Account = (props: {token: string}) => {
                   <h3>
                     My Reservations
                   </h3>
-                  <ReservationList reservations={reservations} />
+                  <ReservationList reservations={reservations} setReservations={setReservations}/>
                 </Container>
               </Col>
             </Row>

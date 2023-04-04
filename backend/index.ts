@@ -2,8 +2,8 @@ import * as dotenv from 'dotenv';
 dotenv.config(); 
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
-import { ISearchParams, IUserInfo, IReservationAugmented, IReservation, IRoomAugmented, IUserLogin } from './interfaces';
-import { search, createClientAcct, loginUser, accountInfo, userReservations } from './db';
+import { ISearchParams, IUserInfo, IReservationEmployee, IReservation, IRoomAugmented, IUserLogin } from './interfaces';
+import { search, createClientAcct, loginUser, accountInfo, userReservations, employeeReservations, cancelReservation, confirmReservation } from './db';
 
 const app: Express = express();
 const port = 5000;
@@ -102,70 +102,101 @@ app.get('/userReservations/:id', async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     const result = await userReservations(id);
-    const reservations:IReservation[] = result.rows.map((reservation: any) => {
+    const reservations: IReservation[] = result.rows.map((reservation: any) => {
       return {
         reservationId: reservation.reservation_id,
         roomId: reservation.room_id,
-        customerNas: reservation.customer_nas,
         reservationStartDate: reservation.reservation_start_date,
         reservationEndDate: reservation.reservation_end_date,
         reservationDate: reservation.reservation_date,
+        customerNas: reservation.customer_nas,
         guests: reservation.guests,
+        hotelZone: reservation.zone,
+        hotelAddress: reservation.address,
+        hotelPhoneNumber: reservation.phone_number,
+        hotelEmail: reservation.email,
+        clientEmail: reservation.email,
+        clientPhoneNumber: reservation.phone_number,
+        chainName: reservation.chain_name,
       }
     });
     res.send(reservations);
   } catch (err) {
     console.log(err);
-    res.status(500).send("Error Getting Reservations");
-  } // ADD hotel info here
+    res.status(500).send("Error Getting User Reservations");
+  }
+});
+
+app.get('/employeeReservations', async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const result = await employeeReservations(id);
+    console.log(result.rows)
+    const reservations: IReservationEmployee[] = result.rows.map((reservation: any) => {
+      return {
+        reservationId: reservation.reservation_id,
+        roomId: reservation.room_id,
+        reservationStartDate: reservation.reservation_start_date,
+        reservationEndDate: reservation.reservation_end_date,
+        reservationDate: reservation.reservation_date,
+        customerNas: reservation.customer_nas,
+        guests: reservation.guests,
+        hotelZone: reservation.zone,
+        hotelAddress: reservation.address,
+        hotelPhoneNumber: reservation.phone_number,
+        hotelEmail: reservation.email,
+        clientEmail: reservation.email,
+        clientPhoneNumber: reservation.phone_number,
+        chainName: reservation.chain_name,
+        clientName: `${reservation.first_name} ${reservation.last_name}`,
+      }
+    });
+    res.send(reservations);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error Getting Employee Reservations");
+  }
+});
+
+app.delete('/cancelReservation/:id', async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const result = await cancelReservation(id);
+    res.send("Cancelled");
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error Cancelling Reservation");
+  }
+});
+
+app.put('/confirmReservation/:id/:employeeNas', async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const employeeNas = req.params.employeeNas;
+    if (employeeNas === "null") {
+      res.status(400).send("Employee Not Logged In");
+    } else{
+      const result = await confirmReservation(id, employeeNas);
+      res.send("Confirmed");
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error Confirming Reservation");
+  }
 });
 
 ///
 
 app.post('/add', (req: Request, res: Response) => {
   res.send(req.body);
-});
+}); // Not Needed
 
 app.delete('deleteUser/:id', (req: Request, res: Response) => {
   res.send("Deleted");
 });
 
-app.delete('/cancelReservation/:id', (req: Request, res: Response) => {
-  res.send("Deleted");
-});
-
-
-
 app.post('/editaccountinfo', (req: Request, res: Response) => {
   res.send("Edited");
-});
-
-app.get('/employeeReservations', (req: Request, res: Response) => {
-  const testReservationsAugmented: IReservationAugmented[] = [
-    {
-      "reservationId": "1",
-      "chainName": "Hilton",
-      "clientName": "John Smith",
-      "roomId": "1",
-      "reservationStartDate": "2020-12-01",
-      "reservationEndDate": "2020-12-05",
-      "reservationDate": "2020-11-01",
-      "customerNas": "123456789",
-      "guests": 2
-    },
-    {
-      "reservationId": "2",
-      "chainName": "Royal",
-      "clientName": "Jane Doe",
-      "roomId": "2",
-      "reservationStartDate": "2020-12-01",
-      "reservationEndDate": "2020-12-05",
-      "reservationDate": "2020-11-01",
-      "customerNas": "123456789",
-      "guests": 2
-    }
-  ];
-  res.send(testReservationsAugmented);
 });
 
 app.post('/employeeCreateRental', (req: Request, res: Response) => {

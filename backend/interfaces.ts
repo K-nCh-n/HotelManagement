@@ -58,13 +58,19 @@ export interface IReservation {
   reservationId: string,
   roomId: string,
   customerNas: string,
-  reservationStartDate: String,
-  reservationEndDate: String,
-  reservationDate: String,
+  reservationStartDate: Date,
+  reservationEndDate: Date,
+  reservationDate: Date,
   guests: number,
+  chainName: string,
+  hotelZone: string,
+  hotelAddress: string,
+  hotelPhoneNumber: string,
+  hotelEmail: string,
 }
 
-export interface IReservationAugmented extends IReservation {
-  chainName: string,
+export interface IReservationEmployee extends IReservation {
   clientName: string,
+  clientEmail: string,
+  clientPhoneNumber: string
 }

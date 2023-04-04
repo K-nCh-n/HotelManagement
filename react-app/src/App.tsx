@@ -22,7 +22,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home isEmployee={isEmployee} />} />
             <Route path="/search" element={<Search />} />
-            <Route path="/employee" element={<Employee isEmployee={isEmployee} />} />
+            <Route path="/employee" element={<Employee isEmployee={isEmployee} employeeNas={token} />} />
             <Route path="/login" element={<Login setToken={setToken} setIsEmployee={setIsEmployee} />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/account" element={<Account token={token} />} />
