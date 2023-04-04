@@ -7,7 +7,7 @@ import { IRoomAugmented, ISearchParams } from "../interfaces";
 import SearchResults from "../components/SearchResults";
 
 const Search = () => {
-  const searchUrl = "http://localhost:5000/search";
+  const searchUrl = `${process.env.REACT_APP_BACKEND_BASEURL}/search`;
   const [searchParams, setSearchParams] = useState<ISearchParams>();
   const [validated, setValidated] = useState(false);
   const [searchResults, setSearchResults] = useState<IRoomAugmented[]>([]);
@@ -19,6 +19,7 @@ const Search = () => {
       try {
         axios.get(searchUrl).then(response => {
           if (!ignore) {
+            console.log(response);
             setSearchResults(response.data);
           }
         });

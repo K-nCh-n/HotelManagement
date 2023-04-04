@@ -10,7 +10,7 @@ const pool = new Pool({
 });
 
 export const search = (searchParams: ISearchParams) => {
-  return pool.query('SELECT * FROM hotel');
+  return pool.query('SELECT * FROM room INNER JOIN hotel ON hotel.hotel_id = room.hotel_id');
 }
 
 export const createClientAcct = async (userInfo: IUserInfo) => {
