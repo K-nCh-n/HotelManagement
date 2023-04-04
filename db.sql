@@ -70,7 +70,6 @@ CREATE TABLE reservation (
     reservation_id character varying(20) NOT NULL,
     room_id varchar NOT NULL,
     customer_nas character varying(20),
-    address character varying(20),
     reservation_start_date date,
     reservation_end_date date,
     PRIMARY KEY (reservation_id),
