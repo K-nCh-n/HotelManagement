@@ -67,7 +67,7 @@ const Account = (props: {token: string}) => {
   return (
     <Container fluid="lg" className="my-2 py-2 bg-light">
       {showEditInfo ?
-        <ClientInfo user={userInfo} setShowEditInfo={setShowEditInfo} />
+        <ClientInfo user={userInfo} setUserInfo={setUserInfo} setShowEditInfo={setShowEditInfo} />
         : 
         <Container>
             <Modal show={showModal} onHide={handleClose}>

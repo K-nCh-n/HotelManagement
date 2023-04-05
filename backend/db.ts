@@ -15,7 +15,7 @@ export const search = (searchParams: ISearchParams) => {
 
 export const createClientAcct = async (userInfo: IUserInfo) => {
   try{
-    const { NAS: customerNas, firstName, lastName, address, email, password } = userInfo;
+    const { customerNas, firstName, lastName, address, email, password } = userInfo;
     const text = `INSERT INTO customer(customer_nas, first_name, last_name, address, registration_date, email, password) VALUES($1, $2, $3, $4, $5, $6, $7)`;
     const values = [customerNas, firstName, lastName, address, new Date(Date.now()).toISOString(), email, password];
     return pool.query(text, values);

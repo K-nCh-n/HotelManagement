@@ -46,7 +46,7 @@ export interface IUserLogin {
 }
 
 export interface IUserInfo {
-  NAS: string,
+  customerNas: string,
   email: string,
   firstName: string,
   lastName: string,
