@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { IUserInfo } from '../interfaces';
 
-const ClientInfo = (props: { user?: IUserInfo, setShowEditInfo?: React.Dispatch<React.SetStateAction<boolean>> }) => {
+const ClientInfo = (props: { user?: IUserInfo, setShowEditInfo?: React.Dispatch<React.SetStateAction<boolean>>, setUserInfo?: (user: IUserInfo) => void }) => {
   const [formData, setFormData] = useState<IUserInfo>(props.user ?? {} as IUserInfo);
   const [validated, setValidated] = useState(false);
   const signupUrl = "http://localhost:5000/signup";
@@ -31,6 +31,7 @@ const ClientInfo = (props: { user?: IUserInfo, setShowEditInfo?: React.Dispatch<
       axios.post(editInfoUrl, body).then(response => {
         console.log(response.data);
         if (props.setShowEditInfo) props.setShowEditInfo(false);
+        if (props.setUserInfo) props.setUserInfo(formData);
       });
     } else {
       axios.post(signupUrl, body).then(response => {
@@ -91,7 +92,7 @@ const ClientInfo = (props: { user?: IUserInfo, setShowEditInfo?: React.Dispatch<
         <Col md="6">
           <Form.Group>
             <Form.Label>Social Insurance Number (SIN/NAS)</Form.Label>
-            <Form.Control name="customerNas" type="text" placeholder="Enter your SIN" defaultValue={props.user?.NAS} onChange={handleChange} required />
+            <Form.Control name="customerNas" type="text" placeholder="Enter your SIN" defaultValue={props.user?.customerNas} onChange={handleChange} required />
             <Form.Control.Feedback type="invalid">
               Please enter a valid NAS.
             </Form.Control.Feedback>

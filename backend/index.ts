@@ -68,7 +68,6 @@ app.get('/search', async (req: Request, res: Response) => {
       roomImage: room.image,
     }
   });
-  console.log(rooms);
   res.send(rooms);
 });
 
@@ -83,7 +82,7 @@ app.get('/account/:id', async (req: Request, res: Response) => {
     } else {
       const accountInfo = result.rows[0];
       const userInfo: IUserInfo = {
-        NAS: accountInfo.nas,
+        customerNas: accountInfo.nas,
         email: accountInfo.email,
         firstName: accountInfo.first_name,
         lastName: accountInfo.last_name,
@@ -191,7 +190,8 @@ app.post('/add', (req: Request, res: Response) => {
   res.send(req.body);
 }); // Not Needed
 
-app.delete('deleteUser/:id', (req: Request, res: Response) => {
+app.delete('/deleteUser/:id', (req: Request, res: Response) => {
+  console.log(req.params.id)
   res.send("Deleted");
 });
 
