@@ -49,7 +49,7 @@ export const accountInfo = async (id: string) => {
 
 export const userReservations = async (id: string) => {
   try{
-    const text = `SELECT reservation_id, reservation.room_id, reservation.customer_nas, reservation_start_date, reservation_end_date, reservation_date, chain_name, zone, hotel.address, hotel.phone_number, hotel.email FROM reservation INNER JOIN room ON room.room_id = reservation.room_id INNER JOIN hotel ON hotel.hotel_id = room.hotel_id WHERE customer_nas = $1`;
+    const text = `SELECT reservation.reservation_id, reservation.room_id, reservation.customer_nas, reservation_start_date, reservation_end_date, reservation_date, chain_name, zone, hotel.address, hotel.phone_number, hotel.email, confirmation.rental_id FROM reservation INNER JOIN room ON room.room_id = reservation.room_id INNER JOIN hotel ON hotel.hotel_id = room.hotel_id FULL JOIN confirmation ON reservation.reservation_id = confirmation.reservation_id WHERE customer_nas = $1`;
     const values = [id];
     return pool.query(text, values);
   } catch (err) {
@@ -60,7 +60,7 @@ export const userReservations = async (id: string) => {
 
 export const employeeReservations = async (id: string) => {
   try{
-    const text = `SELECT reservation_id, reservation.room_id, reservation.customer_nas, reservation_start_date, reservation_end_date, reservation_date, chain_name, zone, hotel.address, hotel.phone_number, hotel.email, customer.email, customer.phone_number, first_name, last_name FROM reservation INNER JOIN room ON room.room_id = reservation.room_id INNER JOIN hotel ON hotel.hotel_id = room.hotel_id INNER JOIN customer ON customer.customer_nas = reservation.customer_nas`;
+    const text = `SELECT reservation_id, reservation.room_id, reservation.customer_nas, reservation_start_date, reservation_end_date, reservation_date, chain_name, zone, hotel.address, hotel.phone_number, hotel.email, customer.email, customer.phone_number, first_name, last_name FROM reservation INNER JOIN room ON room.room_id = reservation.room_id INNER JOIN hotel ON hotel.hotel_id = room.hotel_id INNER JOIN customer ON customer.customer_nas = reservation.customer_nas WHERE reservation_id NOT IN (SELECT reservation_id FROM confirmation)`;
     return pool.query(text);
   } catch (err) {
     console.log(err);

@@ -117,6 +117,7 @@ app.get('/userReservations/:id', async (req: Request, res: Response) => {
         clientEmail: reservation.email,
         clientPhoneNumber: reservation.phone_number,
         chainName: reservation.chain_name,
+        status: reservation.rental_id ? "Confirmed" : "Pending"
       }
     });
     res.send(reservations);
@@ -148,6 +149,7 @@ app.get('/employeeReservations', async (req: Request, res: Response) => {
         clientPhoneNumber: reservation.phone_number,
         chainName: reservation.chain_name,
         clientName: `${reservation.first_name} ${reservation.last_name}`,
+        status: "Pending"
       }
     });
     res.send(reservations);
