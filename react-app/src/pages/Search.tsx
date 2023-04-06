@@ -7,7 +7,7 @@ import { IRoomAugmented, ISearchParams } from "../interfaces";
 import SearchResults from "../components/SearchResults";
 
 const Search = () => {
-  const searchUrl = `http://localhost:5000/search`;
+  const searchUrl = `http://csi2532.ddns.net:5000/search`;
   const [searchParams, setSearchParams] = useState<ISearchParams>();
   const [validated, setValidated] = useState(false);
   const [searchResults, setSearchResults] = useState<IRoomAugmented[]>([]);

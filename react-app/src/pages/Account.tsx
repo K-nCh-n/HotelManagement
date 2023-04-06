@@ -16,8 +16,8 @@ const Account = (props: {token: string}) => {
   useEffect(() => {
     const getDBInfo = () => {
       let ignore = false;
-      const userInfoUrl = `http://localhost:5000/account/${props.token}`;
-      const reservationUrl = `http://localhost:5000/userReservations/${props.token}`;
+      const userInfoUrl = `http://csi2532.ddns.net:5000/account/${props.token}`;
+      const reservationUrl = `http://csi2532.ddns.net:5000/userReservations/${props.token}`;
       if (!ignore) {
         try {
           axios.get(userInfoUrl).then(response => {
@@ -42,7 +42,7 @@ const Account = (props: {token: string}) => {
   const handleShow = () => setShowModal(true);
 
   const deleteUser = () => {
-    const deleteUrl = `http://localhost:5000/deleteUser/${props.token}`;
+    const deleteUrl = `http://csi2532.ddns.net:5000/deleteUser/${props.token}`;
     axios.delete(deleteUrl).then(response => {
       console.log(response.data);
       alert("Your account has been deleted.");

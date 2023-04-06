@@ -12,7 +12,7 @@ const RoomDetails = (props: {token: string}) => {
   const [reservedDates, setReservedDates] = useState<IReservedDates[]>([]);
 
   const [validated, setValidated] = useState(false);
-  const reserveUrl = "http://localhost:5000/reserveRoom";
+  const reserveUrl = "http://csi2532.ddns.net:5000/reserveRoom";
 
   const navigate = useNavigate();
 
@@ -60,10 +60,10 @@ const RoomDetails = (props: {token: string}) => {
   };
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/roomInfo/${id}`).then(response => {
+    axios.get(`http://csi2532.ddns.net:5000/roomInfo/${id}`).then(response => {
       setRoom(response.data);
     });
-    axios.get(`http://localhost:5000/roomAvailability/${id}`).then(response => {
+    axios.get(`http://csi2532.ddns.net:5000/roomAvailability/${id}`).then(response => {
       setReservedDates(response.data);
     });
   }, []);

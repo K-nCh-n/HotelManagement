@@ -9,13 +9,13 @@ import { GoSignIn } from "react-icons/go";
 const Login = (props: { setToken: (token: string ) => void, setIsEmployee: (val: boolean) => void } ) => {
   const [userLogin, setUserLogin] = useState<IUserLogin>({} as IUserLogin );
   const [message, setMessage] = useState<string>("");
-  const loginUrl = "http://localhost:5000/login";
+  const loginUrl = "http://csi2532.ddns.net:5000/login";
   const navigate = useNavigate();
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
-      event.stopPropagation();
+      event.stopPropagation(); 
     } else {
       event.preventDefault();
     }
