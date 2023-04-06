@@ -1,26 +1,26 @@
 export interface ISearchParams {
   // Booking Info
   // les dates (début, fin) de réservationou de location
-  reservationStartDate ?: Date,
-  reservationEndDate ?: Date,
-  bookingStartDate ?: Date,
-  bookingEndDate ?: Date,
+  reservationStartDate?: Date,
+  reservationEndDate?: Date,
+  bookingStartDate?: Date,
+  bookingEndDate?: Date,
 
   // Room Info
   //  la superficie
-  areaLower ?: number,
-  areaUpper ?: number,
+  areaLower?: number,
+  areaUpper?: number,
   //le prix des chambres
-  priceLower ?: number
-  priceUpper ?: number
-  capacity ?: number, // la capacité des chambres
+  priceLower?: number
+  priceUpper?: number
+  capacity?: number, // la capacité des chambres
 
   // Hotel Info    
-  chain ?: string, // la chaîne hôtelière
-  category ?: number, // la catégorie (rating 1-5)
+  chain?: string, // la chaîne hôtelière
+  category?: number, // la catégorie (rating 1-5)
   // le nombre total de chambres dans l’hôtel
-  numberOfRoomsLower ?: number,
-  numberOfRoomsUpper ?: number, 
+  numberOfRoomsLower?: number,
+  numberOfRoomsUpper?: number,
 }
 
 export interface IRoomAugmented {
@@ -69,8 +69,21 @@ export interface IReservation {
   hotelEmail: string,
 }
 
-export interface IReservationEmployee extends IReservation{
+export interface IReservationEmployee extends IReservation {
   clientName: string,
   clientEmail: string,
   clientPhoneNumber: string
+}
+
+export interface IReservationInfo {
+  roomId: string,
+  customerNas: string,
+  reservationStartDate: Date,
+  reservationEndDate: Date,
+  guests?: number,
+}
+
+export interface IReservedDates {
+  reservationStartDate: Date,
+  reservationEndDate: Date,
 }

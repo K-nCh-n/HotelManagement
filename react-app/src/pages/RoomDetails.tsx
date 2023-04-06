@@ -2,13 +2,14 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
-import { IRoomAugmented } from '../interfaces';
+import { IReservedDates, IRoomAugmented } from '../interfaces';
 
 const RoomDetails = (props: {token: string}) => {
   const { id } = useParams<{ id: string }>();
   const [room, setRoom] = useState<IRoomAugmented>({} as IRoomAugmented);
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
+  const [reservedDates, setReservedDates] = useState<IReservedDates[]>([]);
 
   const [validated, setValidated] = useState(false);
   const reserveUrl = "http://localhost:5000/reserveRoom";
@@ -62,7 +63,30 @@ const RoomDetails = (props: {token: string}) => {
     axios.get(`http://localhost:5000/roomInfo/${id}`).then(response => {
       setRoom(response.data);
     });
+    axios.get(`http://localhost:5000/roomAvailability/${id}`).then(response => {
+      setReservedDates(response.data);
+    });
   }, []);
+
+  const verifyAvailability = () => {
+    let available = true;
+    const checkInDate = new Date(checkIn);
+    const checkOutDate = new Date(checkOut);
+    for(let i = 0; i < reservedDates.length; i++) {
+      const date = reservedDates[i];
+      const reservedStartDate = new Date(date.reservationStartDate);
+      const reservedEndDate = new Date(date.reservationEndDate);
+      reservedStartDate.setDate(reservedStartDate.getDate() + 1);
+      reservedEndDate.setDate(reservedEndDate.getDate() + 1);
+      reservedStartDate.setHours(0, 0, 0, 0);
+      reservedEndDate.setHours(0, 0, 0, 0);
+
+      if (checkInDate <= reservedEndDate && checkOutDate >= reservedStartDate) {
+        return false;
+      }
+    };
+    return available;
+  };
 
   return(
     <Container fluid="lg" className="my-2 py-2 bg-light">
@@ -109,6 +133,7 @@ const RoomDetails = (props: {token: string}) => {
                       </Form.Group>
                     </Col>
                   </Row>
+                  {!verifyAvailability() && <p className="text-danger">This room is not available during the selected dates.</p>}
                   <Form.Group>
                     <Button variant="primary rounded-pill px-3 py-2 my-2" type="submit">Reserve</Button>
                   </Form.Group>

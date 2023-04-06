@@ -2,8 +2,8 @@ import * as dotenv from 'dotenv';
 dotenv.config(); 
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
-import { ISearchParams, IUserInfo, IReservationEmployee, IReservation, IRoomAugmented, IUserLogin } from './interfaces';
-import { search, createClientAcct, loginUser, accountInfo, userReservations, employeeReservations, cancelReservation, confirmReservation } from './db';
+import { ISearchParams, IUserInfo, IReservationEmployee, IReservation, IRoomAugmented, IUserLogin, IReservationInfo, IReservedDates } from './interfaces';
+import { search, createClientAcct, loginUser, accountInfo, userReservations, employeeReservations, cancelReservation, confirmReservation, deleteCustomer, editAccountInfo, roomInfo, reserveRoom, getRoomAvailability } from './db';
 
 const app: Express = express();
 const port = 5000;
@@ -184,49 +184,104 @@ app.put('/confirmReservation/:id/:employeeNas', async (req: Request, res: Respon
   }
 });
 
-///
-
-app.post('/add', (req: Request, res: Response) => {
-  res.send(req.body);
-}); // Not Needed
-
-app.delete('/deleteUser/:id', (req: Request, res: Response) => {
-  console.log(req.params.id)
-  res.send("Deleted");
+app.delete('/deleteUser/:id', async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const result = await deleteCustomer(id);
+    res.send("Deleted");
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error Deleting User");
+  }
 });
 
 app.post('/editaccountinfo', (req: Request, res: Response) => {
-  res.send("Edited");
+  try {
+    const userInfo: IUserInfo = req.body;
+    const result = editAccountInfo(userInfo);
+    res.send("Edited");
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error Editing Account Info");
+  }
+});
+
+app.get('/roomInfo/:id', async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const result = await roomInfo(id);
+    if (result.rows.length === 0) {
+      res.status(404).send("Room Not Found");
+    } else if (result.rows.length > 1) {
+      res.status(500).send("Error Getting Room Info");
+    } else {
+      const roomInfo = result.rows[0];
+      const roomInfoToSend: IRoomAugmented = {
+        roomId: roomInfo.room_id,
+        hotelId: roomInfo.hotel_id,
+        price: roomInfo.price,
+        commodities: roomInfo.commodities,
+        capacity: roomInfo.capacity,
+        view: roomInfo.view,
+        extendable: roomInfo.extendable,
+        problems: roomInfo.problems,
+        roomImage: roomInfo.image,
+        hotelName: `${roomInfo.chain_name} ${roomInfo.zone}`,
+        hotelAddress: roomInfo.address,
+        hotelRating: roomInfo.rating,
+        hotelPhoneNumber: roomInfo.phone_number,
+        hotelChain: roomInfo.chain_name,
+      }
+      res.send(roomInfoToSend);
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error Getting Room Info");
+  }
+});
+
+app.post('/reserveRoom', async (req: Request, res: Response) => {
+  try {
+    const reservationInfo: IReservationInfo = req.body;
+    reservationInfo.guests = Math.floor(Math.random() * 5);
+    const result = await reserveRoom(reservationInfo);
+    res.send("Reserved");
+  } catch (err: any) {
+    console.log(err);
+    if (err.message == "Room is not available") {
+      res.status(400).send("Room is not available");
+    } else {
+      res.status(500).send("Error Reserving Room");
+    }
+  }
+});
+
+app.get('/roomAvailability/:id', async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const result = await getRoomAvailability(id);
+    const reservedDates: IReservedDates[] = result.rows.map((date: any) => {
+      return {
+        reservationStartDate: date.start_date,
+        reservationEndDate: date.end_date,
+      }
+    });
+    res.send(reservedDates);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error Getting Room Availability");
+  }
 });
 
 app.post('/employeeCreateRental', (req: Request, res: Response) => {
   res.send("Added");
 });
 
-app.get('/roomInfo/:id', (req: Request, res: Response) => {
-  const testRoom: IRoomAugmented = {
-    roomId: 1234,
-    price: 100,
-    commodities: "Queen Bed, TV, Fridge",
-    capacity: 2,
-    extendable: true,
-    hotelId: 1,
-    hotelName: "Hotel Name",
-    hotelAddress: "Hotel Address",
-    hotelChain: "Hotel Chain",
-    hotelRating: 5,
-    hotelPhoneNumber: "Hotel Phone Number",
-    view: "Seaside",
-    problems: "No AC",
-    roomImage: ""
-  };
-  res.send(testRoom);
-});
+///
 
-app.post('/reserveRoom', (req: Request, res: Response) => {
-  console.log(req.body);
-  res.send("Reserved");
-});
+app.post('/add', (req: Request, res: Response) => {
+  res.send(req.body);
+}); // Not Needed
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);

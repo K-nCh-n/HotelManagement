@@ -74,3 +74,16 @@ export interface IReservationEmployee extends IReservation {
   clientEmail: string,
   clientPhoneNumber: string
 }
+
+export interface IReservationInfo {
+  roomId: string,
+  customerNas: string,
+  reservationStartDate: Date,
+  reservationEndDate: Date,
+  guests?: number,
+}
+
+export interface IReservedDates {
+  reservationStartDate: Date,
+  reservationEndDate: Date,
+}

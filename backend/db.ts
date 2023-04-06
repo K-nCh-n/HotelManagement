@@ -1,5 +1,5 @@
 import { Pool } from 'pg';
-import { ISearchParams, IUserInfo } from './interfaces';
+import { IReservationInfo, ISearchParams, IUserInfo } from './interfaces';
 
 const pool = new Pool({
   user: process.env.POSTGRES_USER,
@@ -88,6 +88,83 @@ export const confirmReservation = async (reservationId: string, employeeNas: str
     const text = `INSERT INTO rental(rental_id, reservation_id, customer_nas, room_id, rental_start_date, rental_end_date, employee_nas) VALUES($1, $2, $3, $4, $5, $6, $7)`;
     const rentalId = `${room_id}${(Math.random() + 1).toString(36).substring(7)}`;
     const values = [rentalId, reservationId, customer_nas, room_id, reservation_start_date, reservation_end_date, employeeNas];
+    return pool.query(text, values);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+export const deleteCustomer = async (id: string) => {
+  try{
+    const text = `DELETE FROM customer WHERE customer_nas = $1`;
+    const values = [id];
+    return pool.query(text, values);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+export const editAccountInfo = async (userInfo: IUserInfo) => {
+  try{
+    const { firstName, lastName, address, email, password, customerNas } = userInfo;
+    const text = `UPDATE customer SET first_name = $1, last_name = $2, address = $3, email = $4, password = $5 WHERE customer_nas = $6`;
+    const values = [firstName, lastName, address, email, password, customerNas];
+    return pool.query(text, values);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+export const roomInfo = async (id: string) => {
+  try{
+    const text = `SELECT * FROM room INNER JOIN hotel ON hotel.hotel_id = room.hotel_id WHERE room_id = $1`;
+    const values = [id];
+    return pool.query(text, values);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+} 
+
+export const reserveRoom = async (reservationInfo: IReservationInfo) => {
+  try{
+    const { roomId, customerNas, reservationStartDate, reservationEndDate } = reservationInfo;
+    const text = `INSERT INTO reservation(reservation_id, room_id, customer_nas, reservation_start_date, reservation_end_date, reservation_date) VALUES($1, $2, $3, $4, $5, $6)`;
+    const reservationId = `${roomId}${(Math.random() + 1).toString(36).substring(7)}`;
+    const values = [reservationId, roomId, customerNas, reservationStartDate, reservationEndDate, new Date(Date.now()).toISOString()];
+    const isAvailable = await checkRoomAvailability(reservationInfo);
+    console.log(isAvailable);
+    if (isAvailable) {
+      return pool.query(text, values);
+    } else {
+      throw new Error('Room is not available');
+    }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+export const checkRoomAvailability = async (reservationInfo: IReservationInfo) => {
+  try {
+    const { roomId, reservationStartDate, reservationEndDate } = reservationInfo;
+    const text = `SELECT count(reservation_id) FROM reservation WHERE room_id = $1 AND reservation_start_date <= $3 AND reservation_end_date >= $2 UNION SELECT count(rental_id) FROM Rental WHERE room_id = $1 AND rental_start_date <= $3 AND rental_end_date >= $2`;
+    const values = [roomId, reservationStartDate, reservationEndDate];
+    const test = await pool.query(text, values);
+    return test.rowCount === 0;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+export const getRoomAvailability = async (roomId: string) => {
+  try {
+    const text = `SELECT reservation_start_date as start_date, reservation_end_date as end_date FROM reservation WHERE room_id = $1 UNION SELECT rental_start_date as start_date, rental_end_date as end_date FROM rental WHERE room_id = $1`;
+    const values = [roomId];
     return pool.query(text, values);
   } catch (err) {
     console.log(err);
