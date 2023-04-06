@@ -1,6 +1,6 @@
 import { Container, Row, Col, Button, Modal } from "react-bootstrap";
 import { IReservation, IReservationEmployee } from "../interfaces";
-import { MdDeleteForever, MdOutlineCancel } from "react-icons/md";
+import { MdDeleteForever, MdOutlineCancel, MdOutlineCheckCircleOutline } from "react-icons/md";
 import axios from "axios";
 import { useState } from "react";
 
@@ -105,8 +105,10 @@ const ReservationList = (props: {reservations: (IReservation|IReservationEmploye
               </Col>
             </Row>
               {"clientName" in reservation ?
-                <Button className="btn btn-primary" onClick={() => confirmReservation(reservation)}>Confirm</Button> :
-                <Button className="btn-danger p-2" onClick={() => handleShow(reservation)}><MdOutlineCancel size={20} /> Cancel Reservation</Button>}
+                <Button className="btn btn-primary" onClick={() => confirmReservation(reservation)}> Confirm</Button> :
+                reservation.status === "Pending" ?
+                  <Button className="btn-danger p-2" onClick={() => handleShow(reservation)}><MdOutlineCancel size={20} /> Cancel Reservation</Button> :
+                <Button className="btn btn-success"><MdOutlineCheckCircleOutline size={20} /> Confirmed</Button>}
             <hr />
           </Container>
         )

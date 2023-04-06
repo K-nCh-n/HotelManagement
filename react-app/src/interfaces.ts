@@ -67,6 +67,7 @@ export interface IReservation {
   hotelAddress: string,
   hotelPhoneNumber: string,
   hotelEmail: string,
+  status: string,
 }
 
 export interface IReservationEmployee extends IReservation {
