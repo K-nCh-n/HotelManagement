@@ -19,7 +19,7 @@ const Employee = (props: {isEmployee: boolean, employeeNas: string}) => {
   useEffect(() => {
     const getDBInfo = () => {
       let ignore = false;
-      const reservationUrl = "http://localhost:5000/employeeReservations";
+      const reservationUrl = "http://csi2532.ddns.net:5000/employeeReservations";
       try {
         axios.get(reservationUrl).then(response => {
           if (!ignore) {
@@ -79,7 +79,7 @@ const Employee = (props: {isEmployee: boolean, employeeNas: string}) => {
       "newReservation": newReservation,
     };
 
-    const reservationUrl = "http://localhost:5000/employeeCreateRental";
+    const reservationUrl = "http://csi2532.ddns.net:5000/employeeCreateRental";
     axios.post(reservationUrl, body).then(response => {
       console.log(response);
     });

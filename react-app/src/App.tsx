@@ -15,7 +15,7 @@ import useToken from './components/Token';
 function App() {
   const { token, setToken, isEmployee, setIsEmployee } = useToken();
   return (
-    <Router>
+    <Router basename='HotelManagement'>
       <div>
         <NavigationBar token={token} />
         <div>

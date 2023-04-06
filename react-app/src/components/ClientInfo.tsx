@@ -7,8 +7,8 @@ import { IUserInfo } from '../interfaces';
 const ClientInfo = (props: { user?: IUserInfo, setShowEditInfo?: React.Dispatch<React.SetStateAction<boolean>>, setUserInfo?: (user: IUserInfo) => void }) => {
   const [formData, setFormData] = useState<IUserInfo>(props.user ?? {} as IUserInfo);
   const [validated, setValidated] = useState(false);
-  const signupUrl = "http://localhost:5000/signup";
-  const editInfoUrl = "http://localhost:5000/editaccountinfo";
+  const signupUrl = "http://csi2532.ddns.net:5000/signup";
+  const editInfoUrl = "http://csi2532.ddns.net:5000/editaccountinfo";
   const navigate = useNavigate();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
