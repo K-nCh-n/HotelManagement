@@ -44,6 +44,7 @@ const RoomDetails = (props: {token: string}) => {
     try{
       axios.post(reserveUrl, body).then(response => {
         console.log(response);
+        alert("Room reserved successfully!");
       });
     } catch (error) {
       console.log(error);
