@@ -37,7 +37,7 @@ const EmployeeReservations = (props: {isEmployee: boolean, employeeNas: string})
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setFilters({ ...filters, [name]: value });
+    setFilters({ ...filters, [name]: value.trim() });
   };
 
   const handleFilterSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -61,7 +61,7 @@ const EmployeeReservations = (props: {isEmployee: boolean, employeeNas: string})
   const [newReservation, setNewReservation] = useState<IReservation>({} as IReservation);
   const handleInputChange = (event: any) => {
     const { name, value } = event.target;
-    setNewReservation({ ...newReservation, [name]: value });
+    setNewReservation({ ...newReservation, [name]: value.trim() });
   };
   const handleSubmit = (event: any) => {
     const form = event.currentTarget;
