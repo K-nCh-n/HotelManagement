@@ -1,10 +1,8 @@
 export interface ISearchParams {
   // Booking Info
   // les dates (début, fin) de réservationou de location
-  reservationStartDate?: Date,
-  reservationEndDate?: Date,
-  bookingStartDate?: Date,
-  bookingEndDate?: Date,
+  stayStartDate?: Date,
+  stayEndDate?: Date,
 
   // Room Info
   //  la superficie
@@ -21,6 +19,8 @@ export interface ISearchParams {
   // le nombre total de chambres dans l’hôtel
   numberOfRoomsLower?: number,
   numberOfRoomsUpper?: number,
+
+  location?: string,
 }
 
 export interface IRoomAugmented {
@@ -34,7 +34,7 @@ export interface IRoomAugmented {
   problems: string,
   hotelName: string,
   hotelAddress: string,
-  hotelRating: number,
+  rating: number,
   hotelChain: string,
   hotelPhoneNumber: string,
   roomImage: string,
