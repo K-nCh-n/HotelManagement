@@ -109,7 +109,7 @@ const RoomDetails = (props: {token: string}) => {
                     <p>Hotel Name: {room.hotelName}</p>
                     <p>Hotel Address: {room.hotelAddress}</p>
                     <p>Hotel Chain: {room.hotelChain}</p>
-                    <p>Hotel Rating: {room.hotelRating}</p>
+                    <p>Hotel Rating: {room.rating}</p>
                   </Col>
                 </Row>
                 <Form noValidate validated={validated} onSubmit={handleSubmit}>

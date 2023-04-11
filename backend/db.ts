@@ -10,7 +10,65 @@ const pool = new Pool({
 });
 
 export const search = (searchParams: ISearchParams) => {
-  return pool.query('SELECT * FROM room INNER JOIN hotel ON hotel.hotel_id = room.hotel_id');
+  try {
+    const { stayStartDate, stayEndDate, areaLower, areaUpper, priceLower, priceUpper, chain, category, numberOfRoomsLower, numberOfRoomsUpper, location } = searchParams;
+    console.log(stayStartDate, stayEndDate, areaLower, areaUpper, priceLower, priceUpper, chain, category, numberOfRoomsLower, numberOfRoomsUpper, location);
+    const text = `
+      SELECT 
+        room.room_id, 
+        room.hotel_id, 
+        room.price, 
+        room.commodities, 
+        room.capacity, 
+        room.view, 
+        room.extendable, 
+        room.problems, 
+        hotel.rating,
+        hotel.chain_name, 
+        hotel.zone, 
+        hotel.address, 
+        hotel.phone_number, 
+        room.image
+      FROM 
+        room 
+      INNER JOIN 
+        hotel ON hotel.hotel_id = room.hotel_id
+      WHERE 
+        (
+          ($1::date IS NULL OR $2::date IS NULL) OR 
+          (
+            room.room_id NOT IN (
+              SELECT room_id
+              FROM reservation
+              WHERE 
+                reservation_start_date <= $2::date AND reservation_end_date >= $1::date
+                OR reservation_start_date BETWEEN $1::date AND $2::date
+                OR reservation_end_date BETWEEN $1::date AND $2::date
+            )
+          )
+        )
+        AND ($3::integer IS NULL OR room.capacity >= $3::integer)
+        AND ($4::integer IS NULL OR room.capacity <= $4::integer)
+        AND ($5::integer IS NULL OR room.price >= $5::integer)
+        AND ($6::integer IS NULL OR room.price <= $6::integer)
+        AND ($7::text IS NULL OR hotel.chain_name LIKE $7::text)
+        AND ($8::integer IS NULL OR hotel.rating = $8::integer)
+        AND (
+          $9::integer IS NULL OR $10::integer IS NULL OR 
+          (
+            SELECT COUNT(*)
+            FROM room r2
+            WHERE r2.hotel_id = hotel.hotel_id
+          ) BETWEEN $9::integer AND $10::integer
+        )
+        AND ($11::text IS NULL OR CONCAT(hotel.zone, ' ', hotel.address) LIKE $11::text)
+`;
+    const values = [stayStartDate, stayEndDate, areaLower, areaUpper, priceLower, priceUpper, chain, category, numberOfRoomsLower, numberOfRoomsUpper, location];
+    return pool.query(text, values);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
 }
 
 export const createClientAcct = async (userInfo: IUserInfo) => {

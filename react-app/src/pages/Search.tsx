@@ -47,7 +47,7 @@ const Search = () => {
 
     setValidated(true);
 
-    axios.get(searchUrl, { params: {searchParams} }).then(response => {
+    axios.get(searchUrl, { params: {...searchParams} }).then(response => {
       console.log(response);
       setSearchResults(response.data);
       setShowSearchFields(false);
@@ -72,13 +72,13 @@ const Search = () => {
                 <Col md='6'>
                   <Form.Group>
                     <Form.Label className="my-0">Hotel Chain</Form.Label>
-                    <Form.Control name="chain" type="text" placeholder="Enter Hotel Chain Name" onChange={handleChange} />
+                    <Form.Control name="chain" type="text" defaultValue={searchParams?.chain} placeholder="Enter Hotel Chain Name" onChange={handleChange} />
                   </Form.Group>
                 </Col>
                 <Col md='6'>
                   <Form.Group>
                     <Form.Label className="my-0">Hotel Rating</Form.Label>
-                    <Form.Select name="capacity" defaultValue={""} onChange={handleChange}>
+                    <Form.Select name="capacity" defaultValue={searchParams?.category ?? ""} onChange={handleChange}>
                       <option disabled></option>
                       <option>1</option>
                       <option>2</option>
@@ -95,13 +95,13 @@ const Search = () => {
                 <h6 className="px-1">Number of Rooms</h6>
                 <Col>
                   <Form.Group>
-                    <Form.Control name="numberOfRoomsLower" type="number" placeholder="" onChange={handleChange} />
+                    <Form.Control name="numberOfRoomsLower" type="number" placeholder="" defaultValue={searchParams?.numberOfRoomsLower} onChange={handleChange} />
                   </Form.Group>
                 </Col>
                 -
                 <Col>
                   <Form.Group>
-                    <Form.Control name="numberOfRoomsUpper" type="number" placeholder="" onChange={handleChange} />
+                    <Form.Control name="numberOfRoomsUpper" type="number" placeholder="" defaultValue={searchParams?.numberOfRoomsUpper} onChange={handleChange} />
                   </Form.Group>
                 </Col>
               </Row>
@@ -115,29 +115,29 @@ const Search = () => {
                 <h6 className="px-1">Room Price</h6>
                 <Col>
                   <Form.Group>
-                    <Form.Control name="priceLower" type="text" placeholder="" onChange={handleChange} />
+                    <Form.Control name="priceLower" type="text" placeholder="" defaultValue={searchParams?.priceLower} onChange={handleChange} />
                   </Form.Group>
                 </Col>
                 -
                 <Col>
                   <Form.Group>
-                    <Form.Control name="priceUpper" type="text" placeholder="" onChange={handleChange} />
+                    <Form.Control name="priceUpper" type="text" placeholder="" defaultValue={searchParams?.priceUpper} onChange={handleChange} />
                   </Form.Group>
                 </Col>
               </Row>
             </Col>
             <Col md='5'>
               <Row className="text-center">
-                <h6 className="px-1">Area of Room</h6>
+                <h6 className="px-1">Capacity</h6>
                 <Col>
                   <Form.Group>
-                    <Form.Control name="areaLower" type="number" placeholder="" onChange={handleChange} />
+                    <Form.Control name="areaLower" type="number" placeholder="" defaultValue={searchParams?.areaLower} onChange={handleChange} />
                   </Form.Group>
                 </Col>
                 -
                 <Col>
                   <Form.Group>
-                    <Form.Control name="areaUpper" type="number" placeholder="" onChange={handleChange} />
+                    <Form.Control name="areaUpper" type="number" placeholder="" defaultValue={searchParams?.areaUpper} onChange={handleChange} />
                   </Form.Group>
                 </Col>
               </Row>
@@ -147,7 +147,7 @@ const Search = () => {
             <Col md='5'>
               <Form.Group>
                 <Form.Label className="my-0">Capacity</Form.Label>
-                <Form.Select name="capacity" defaultValue={""} onChange={handleChange}>
+                <Form.Select name="capacity" defaultValue={searchParams?.capacity ?? ""} onChange={handleChange}>
                   <option disabled></option>
                   <option>1</option>
                   <option>2</option>
@@ -162,37 +162,27 @@ const Search = () => {
             </Col>
           </Row>
 
-          <h5>Reservation/Booking Information</h5>
           <Row className="my-1 px-2 justify-content-around">
             <Col md='5' className="text-center">
-              <h6 className="px-1">Reservation Date</h6>
+              <h6 className="px-1">Stay Date</h6>
               <Row>
                 <Col xs='6'>
                   <Form.Group className="my-1">
-                    <Form.Control name="reservationStartDate" type="date" placeholder="Date" onChange={handleChange} />
+                    <Form.Control name="stayStartDate" type="date" placeholder="Date" defaultValue={searchParams?.stayStartDate?.getDate()} onChange={handleChange} />
                   </Form.Group>
                 </Col>
                 <Col xs='6'>
                   <Form.Group className="my-1">
-                    <Form.Control name="reservationEndDate" type="date" placeholder="Date" onChange={handleChange} />
+                    <Form.Control name="stayEndDate" type="date" placeholder="Date" defaultValue={searchParams?.stayEndDate?.getDate()} onChange={handleChange} />
                   </Form.Group>
                 </Col>
               </Row>
             </Col>
-            <Col md='5' className="text-center">
-              <h6 className="px-1">Booking Date</h6>
-              <Row>
-                <Col xs='6'>
-                  <Form.Group className="my-1">
-                    <Form.Control name="bookingStartDate" type="date" placeholder="Date" onChange={handleChange} />
-                  </Form.Group>
-                </Col>
-                <Col xs='6'>
-                  <Form.Group className="my-1">
-                    <Form.Control name="bookingEndDate" type="date" placeholder="Date" onChange={handleChange} />
-                  </Form.Group>
-                </Col>
-              </Row>
+            <Col md='5'>
+              <h6>Location</h6>
+              <Form.Group>
+                <Form.Control name="location" type="text" placeholder="Enter Location" defaultValue={searchParams?.location} onChange={handleChange} />
+              </Form.Group>
             </Col>
           </Row>
 

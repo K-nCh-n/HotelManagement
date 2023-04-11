@@ -33,7 +33,7 @@ const SearchResults = (props: {searchResults: IRoomAugmented[]}) => {
               <Col md="4">
                 <p>Hotel Address: {room.hotelAddress}</p>
                 <p>Hotel Chain: {room.hotelChain}</p>
-                <p>Hotel Rating: {stars(room.hotelRating)}</p>
+                <p>Hotel Rating: {stars(room.rating)}</p>
               </Col>
             </Row>
             <Link to={`/room/${room.roomId}`} className="btn btn-primary rounded-pill px-3 py-2 mx-3">More Details</Link>

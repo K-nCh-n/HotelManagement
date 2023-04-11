@@ -47,28 +47,33 @@ app.post('/login', async (req: Request, res: Response) => {
 });
 
 app.get('/search', async (req: Request, res: Response) => {
-  const searchParams: ISearchParams = req.query;
-  console.log(searchParams);
-  const result = await search(searchParams);
-  const rooms: IRoomAugmented[] = result.rows.map((room: any) => {
-    return {
-      roomId: room.room_id,
-      hotelId: room.hotel_id,
-      price: room.price,
-      commodities: room.commodities,
-      capacity: room.capacity,
-      view: room.view,
-      extendable: room.extendable,
-      problems: room.problems,
-      hotelName: room.chain_name + " " + room.zone,
-      hotelAddress: room.address,
-      hotelRating: room.rating,
-      hotelChain: room.chain_name,
-      hotelPhoneNumber: room.phone_number,
-      roomImage: room.image,
-    }
-  });
-  res.send(rooms);
+  try {
+    const searchParams = req.query as ISearchParams;
+    console.log(searchParams);
+    const result = await search(searchParams);
+    const rooms: IRoomAugmented[] = result.rows.map((room: any) => {
+      return {
+        roomId: room.room_id,
+        hotelId: room.hotel_id,
+        price: room.price,
+        commodities: room.commodities,
+        capacity: room.capacity,
+        view: room.view,
+        extendable: room.extendable,
+        problems: room.problems,
+        hotelName: room.chain_name + " " + room.zone,
+        hotelAddress: room.address,
+        rating: room.rating,
+        hotelChain: room.chain_name,
+        hotelPhoneNumber: room.phone_number,
+        roomImage: room.image,
+      }
+    });
+    res.send(rooms);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error Searching");
+  }
 });
 
 app.get('/account/:id', async (req: Request, res: Response) => {
@@ -231,7 +236,7 @@ app.get('/roomInfo/:id', async (req: Request, res: Response) => {
         roomImage: roomInfo.image,
         hotelName: `${roomInfo.chain_name} ${roomInfo.zone}`,
         hotelAddress: roomInfo.address,
-        hotelRating: roomInfo.rating,
+        rating: roomInfo.rating,
         hotelPhoneNumber: roomInfo.phone_number,
         hotelChain: roomInfo.chain_name,
       }
