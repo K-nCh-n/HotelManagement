@@ -180,6 +180,8 @@ app.put('/confirmReservation/:id/:employeeNas', async (req: Request, res: Respon
   try {
     const id = req.params.id;
     const employeeNas = req.params.employeeNas;
+    console.log(employeeNas);
+    console.log(id);
     if (employeeNas === "null") {
       res.status(400).send("Employee Not Logged In");
     } else{

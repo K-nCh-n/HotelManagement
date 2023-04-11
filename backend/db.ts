@@ -1,5 +1,6 @@
 import { Pool } from 'pg';
 import { IEmployeeInfo, IReservationInfo, ISearchParams, IUserInfo } from './interfaces';
+import e from 'express';
 
 const pool = new Pool({
   user: process.env.POSTGRES_USER,
@@ -74,8 +75,8 @@ export const search = (searchParams: ISearchParams) => {
 export const createClientAcct = async (userInfo: IUserInfo) => {
   try{
     const { NAS, firstName, lastName, address, email, password } = userInfo;
-    const text = `INSERT INTO customer(customer_nas, first_name, last_name, address, registration_date, email, password) VALUES($1, $2, $3, $4, $5, $6, $7)`;
-    const values = [NAS, firstName, lastName, address, new Date(Date.now()).toISOString(), email, password];
+    const text = `INSERT INTO customer(customer_nas, first_name, last_name, address, email, password) VALUES($1, $2, $3, $4, $5, $6)`;
+    const values = [NAS, firstName, lastName, address, email, password];
     return pool.query(text, values);
   } catch (err) {
     console.log(err);
@@ -154,17 +155,23 @@ export const cancelReservation = async (id: string) => {
 
 export const confirmReservation = async (reservationId: string, employeeNas: string) => {
   try{
-    const query = `SELECT customer_nas, room_id, reservation_start_date, reservation_end_date 
+    const query = `SELECT room_id
                    FROM reservation 
                    WHERE reservation_id = $1`;
     const queryValues = [reservationId];
-    const { customer_nas, room_id, reservation_start_date, reservation_end_date } = (await pool.query(query, queryValues)).rows[0];
+    const results = await pool.query(query, queryValues);
+    if (results.rows.length === 0) {
+      throw new Error('Reservation not found');
+    } else if (results.rows.length > 1) {
+      throw new Error('Multiple reservations found');
+    } else {
+      const { room_id } = results.rows[0];
+      const rentalId = `${room_id}${(Math.random() + 1).toString(36).substring(7)}`;
 
-    const text = `INSERT INTO rental(rental_id, reservation_id, customer_nas, room_id, rental_start_date, rental_end_date, employee_nas)
-                  VALUES($1, $2, $3, $4, $5, $6, $7)`;
-    const rentalId = `${room_id}${(Math.random() + 1).toString(36).substring(7)}`;
-    const values = [rentalId, reservationId, customer_nas, room_id, reservation_start_date, reservation_end_date, employeeNas];
-    return pool.query(text, values);
+      const confirmationText = `INSERT INTO confirmation(reservation_id, rental_id, employee_nas) VALUES($1, $2, $3)`;
+      const confirmationValues = [reservationId, rentalId, employeeNas];
+      return pool.query(confirmationText, confirmationValues);
+    }
   } catch (err) {
     console.log(err);
     throw err;
