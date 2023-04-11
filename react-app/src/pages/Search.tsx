@@ -33,7 +33,7 @@ const Search = () => {
 
   const handleChange = (event: any) => {
     const { name, value } = event.target;
-    setSearchParams({ ...searchParams, [name]: value })
+    setSearchParams({ ...searchParams, [name]: value.trim() })
   }
   const handleSubmit = (event: any) => {
     const form = event.currentTarget;

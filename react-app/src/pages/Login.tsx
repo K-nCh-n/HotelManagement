@@ -33,7 +33,7 @@ const Login = (props: { setToken: (token: string ) => void, setIsEmployee: (val:
           props.setIsEmployee(true);
           navigate('/employee');
         } else {
-          navigate(-1);
+          navigate('/account');
         }
       })
       .catch(err => {
@@ -48,7 +48,7 @@ const Login = (props: { setToken: (token: string ) => void, setIsEmployee: (val:
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setUserLogin({ ...userLogin, [name]: value })
+    setUserLogin({ ...userLogin, [name]: value.trim() })
   };
 
   return (

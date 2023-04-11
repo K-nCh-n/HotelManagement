@@ -27,8 +27,8 @@ const SearchResults = (props: {searchResults: IRoomAugmented[]}) => {
               </Col>
               <Col md="4">
                 <p>Hotel Name: {room.hotelName}</p>
-                <p>Price: {room.price}</p>
-                <p>Maximum Number of Guests: {room.capacity} {room.extendable && ("Can be extended if required")}</p>
+                <p>Price: ${room.price}/night</p>
+                <p>Maximum Number of Guests: {room.capacity} {room.extendable && ("(Can be extended if required)")}</p>
               </Col>
               <Col md="4">
                 <p>Hotel Address: {room.hotelAddress}</p>

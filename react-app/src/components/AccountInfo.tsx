@@ -8,6 +8,7 @@ import { BiArrowBack } from 'react-icons/bi';
 const AccountInfo = (props: { user?: IUserInfo|IEmployeeInfo, setShowEditInfo?: React.Dispatch<React.SetStateAction<boolean>>, setUserInfo?: (user: IUserInfo|IEmployeeInfo) => void, isEmployee: boolean  }) => {
   const [formData, setFormData] = useState<IUserInfo|IEmployeeInfo>(props.user ?? {} as IUserInfo);
   const [validated, setValidated] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const signupUrl = "http://csi2532.ddns.net:5000/signup";
   const editInfoUrl = "http://csi2532.ddns.net:5000/editaccountinfo";
   const employeeSignUpUrl = "http://csi2532.ddns.net:5000/employeeSignUp";
@@ -55,13 +56,16 @@ const AccountInfo = (props: { user?: IUserInfo|IEmployeeInfo, setShowEditInfo?: 
       axios.post(signupUrl, body).then(response => {
         console.log(response.data);
         navigate('/login');
+      }).catch(error => {
+        console.log(error);
+        setErrorMessage(error.response.data);
       });
     }
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value })
+    setFormData({ ...formData, [name]: value.trim() })
   };
 
   return (

@@ -72,14 +72,14 @@ const RoomDetails = (props: {token: string}) => {
     let available = true;
     const checkInDate = new Date(checkIn);
     const checkOutDate = new Date(checkOut);
+    checkInDate.setHours(0, 0, 0, 0);
+    checkOutDate.setHours(0, 0, 0, 0);
+    checkInDate.setDate(checkInDate.getDate() + 1);
+    checkOutDate.setDate(checkOutDate.getDate() + 1);
     for(let i = 0; i < reservedDates.length; i++) {
       const date = reservedDates[i];
       const reservedStartDate = new Date(date.reservationStartDate);
       const reservedEndDate = new Date(date.reservationEndDate);
-      reservedStartDate.setDate(reservedStartDate.getDate() + 1);
-      reservedEndDate.setDate(reservedEndDate.getDate() + 1);
-      reservedStartDate.setHours(0, 0, 0, 0);
-      reservedEndDate.setHours(0, 0, 0, 0);
 
       if (checkInDate <= reservedEndDate && checkOutDate >= reservedStartDate) {
         return false;
