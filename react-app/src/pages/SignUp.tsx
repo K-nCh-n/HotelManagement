@@ -1,11 +1,11 @@
 import { Container } from "react-bootstrap"
-import ClientInfo from "../components/ClientInfo"
+import AccountInfo from "../components/AccountInfo"
 
 const SignUp = () => {
   return (
     <Container>
       <h1>Sign Up</h1>
-      <ClientInfo />
+      <AccountInfo isEmployee={false} />
     </Container>
   )
 }

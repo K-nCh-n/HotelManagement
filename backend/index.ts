@@ -2,8 +2,8 @@ import * as dotenv from 'dotenv';
 dotenv.config(); 
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
-import { ISearchParams, IUserInfo, IReservationEmployee, IReservation, IRoomAugmented, IUserLogin, IReservationInfo, IReservedDates } from './interfaces';
-import { search, createClientAcct, loginUser, accountInfo, userReservations, employeeReservations, cancelReservation, confirmReservation, deleteCustomer, editAccountInfo, roomInfo, reserveRoom, getRoomAvailability } from './db';
+import { ISearchParams, IUserInfo, IReservationEmployee, IReservation, IRoomAugmented, IUserLogin, IReservationInfo, IReservedDates, IEmployeeInfo } from './interfaces';
+import { search, createClientAcct, loginUser, accountInfo, userReservations, employeeReservations, cancelReservation, confirmReservation, deleteAccount, editAccountInfo, roomInfo, reserveRoom, getRoomAvailability, createEmployee } from './db';
 
 const app: Express = express();
 const port = 5000;
@@ -81,13 +81,14 @@ app.get('/account/:id', async (req: Request, res: Response) => {
       res.status(500).send("Error Getting Account Info");
     } else {
       const accountInfo = result.rows[0];
-      const userInfo: IUserInfo = {
-        customerNas: accountInfo.nas,
+      const userInfo: IUserInfo|IEmployeeInfo = {
+        NAS: accountInfo.nas,
         email: accountInfo.email,
         firstName: accountInfo.first_name,
         lastName: accountInfo.last_name,
         address: accountInfo.address,
         password: accountInfo.password,
+        hotelId: accountInfo.hotel_id,
       }
       res.send(userInfo);
     }
@@ -186,10 +187,10 @@ app.put('/confirmReservation/:id/:employeeNas', async (req: Request, res: Respon
   }
 });
 
-app.delete('/deleteUser/:id', async (req: Request, res: Response) => {
+app.delete('/deleteUser', async (req: Request, res: Response) => {
   try {
-    const id = req.params.id;
-    const result = await deleteCustomer(id);
+    const {token, isEmployee} = req.body;
+    const result = await deleteAccount(token, isEmployee);
     res.send("Deleted");
   } catch (err) {
     console.log(err);
@@ -277,6 +278,17 @@ app.get('/roomAvailability/:id', async (req: Request, res: Response) => {
 
 app.post('/employeeCreateRental', (req: Request, res: Response) => {
   res.send("Added");
+});
+
+app.post('/employeeSignUp', async (req: Request, res: Response) => {
+  try {
+    const employeeInfo: IEmployeeInfo = req.body.employeeInfo;
+    const result = await createEmployee(employeeInfo);
+    res.send("Added");
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error Signing Up");
+  }
 });
 
 ///

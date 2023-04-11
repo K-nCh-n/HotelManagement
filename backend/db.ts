@@ -1,5 +1,5 @@
 import { Pool } from 'pg';
-import { IReservationInfo, ISearchParams, IUserInfo } from './interfaces';
+import { IEmployeeInfo, IReservationInfo, ISearchParams, IUserInfo } from './interfaces';
 
 const pool = new Pool({
   user: process.env.POSTGRES_USER,
@@ -15,9 +15,9 @@ export const search = (searchParams: ISearchParams) => {
 
 export const createClientAcct = async (userInfo: IUserInfo) => {
   try{
-    const { customerNas, firstName, lastName, address, email, password } = userInfo;
+    const { NAS, firstName, lastName, address, email, password } = userInfo;
     const text = `INSERT INTO customer(customer_nas, first_name, last_name, address, registration_date, email, password) VALUES($1, $2, $3, $4, $5, $6, $7)`;
-    const values = [customerNas, firstName, lastName, address, new Date(Date.now()).toISOString(), email, password];
+    const values = [NAS, firstName, lastName, address, new Date(Date.now()).toISOString(), email, password];
     return pool.query(text, values);
   } catch (err) {
     console.log(err);
@@ -38,7 +38,7 @@ export const loginUser = async (email: string, password: string) => {
 
 export const accountInfo = async (id: string) => {
   try{
-    const text = `SELECT customer_nas as nas, email, first_name, last_name, address, password FROM customer WHERE customer_nas = $1 UNION SELECT employee_nas as nas, email, first_name, last_name, address, password FROM employee WHERE employee_nas = $1`;
+    const text = `SELECT customer_nas as nas, email, first_name, last_name, address, password, null as hotel_id FROM customer WHERE customer_nas = $1 UNION SELECT employee_nas as nas, email, first_name, last_name, address, password, hotel_id FROM employee WHERE employee_nas = $1`;
     const values = [id];
     return pool.query(text, values);
   } catch (err) {
@@ -95,9 +95,14 @@ export const confirmReservation = async (reservationId: string, employeeNas: str
   }
 }
 
-export const deleteCustomer = async (id: string) => {
+export const deleteAccount = async (id: string, isEmployee: boolean) => {
   try{
-    const text = `DELETE FROM customer WHERE customer_nas = $1`;
+    let text: string;
+    if (isEmployee) {
+      text = `DELETE FROM employee WHERE employee_nas = $1`;
+    } else {
+      text = `DELETE FROM customer WHERE customer_nas = $1`;
+    }
     const values = [id];
     return pool.query(text, values);
   } catch (err) {
@@ -108,9 +113,9 @@ export const deleteCustomer = async (id: string) => {
 
 export const editAccountInfo = async (userInfo: IUserInfo) => {
   try{
-    const { firstName, lastName, address, email, password, customerNas } = userInfo;
+    const { firstName, lastName, address, email, password, NAS } = userInfo;
     const text = `UPDATE customer SET first_name = $1, last_name = $2, address = $3, email = $4, password = $5 WHERE customer_nas = $6`;
-    const values = [firstName, lastName, address, email, password, customerNas];
+    const values = [firstName, lastName, address, email, password, NAS];
     return pool.query(text, values);
   } catch (err) {
     console.log(err);
@@ -165,6 +170,68 @@ export const getRoomAvailability = async (roomId: string) => {
   try {
     const text = `SELECT reservation_start_date as start_date, reservation_end_date as end_date FROM reservation WHERE room_id = $1 UNION SELECT rental_start_date as start_date, rental_end_date as end_date FROM rental WHERE room_id = $1`;
     const values = [roomId];
+    return pool.query(text, values);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+export const createRental = async (rentalInfo: any) => {
+  try {
+    const { rentalId, reservationId, customerNas, roomId, rentalStartDate, rentalEndDate, employeeNas } = rentalInfo;
+    const text = `INSERT INTO rental(rental_id, reservation_id, customer_nas, room_id, rental_start_date, rental_end_date, employee_nas) VALUES($1, $2, $3, $4, $5, $6, $7)`;
+    const values = [rentalId, reservationId, customerNas, roomId, rentalStartDate, rentalEndDate, employeeNas];
+    return pool.query(text, values);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+export const createEmployee = async (employeeInfo: IEmployeeInfo) => {
+  try {
+    console.log(employeeInfo);
+    const { NAS, firstName, lastName, address, email, password, hotelId, yearlySalary } = employeeInfo;
+    console.log(NAS, firstName, lastName, address, email, password, hotelId, yearlySalary)
+    const text = `INSERT INTO employee(employee_nas, first_name, last_name, address, email, password, hotel_id) VALUES($1, $2, $3, $4, $5, $6, $7)`;
+    const values = [NAS, firstName, lastName, address, email, password, hotelId];
+    return pool.query(text, values);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+export const addHotelChain = async (hotelChainInfo: any) => {
+  try {
+    const { hotelChainId, hotelChainName, hotelChainAddress } = hotelChainInfo;
+    const text = `INSERT INTO hotel_chain(hotel_chain_id, hotel_chain_name, hotel_chain_address) VALUES($1, $2, $3)`;
+    const values = [hotelChainId, hotelChainName, hotelChainAddress];
+    return pool.query(text, values);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+export const addHotel = async (hotelInfo: any) => {
+  try {
+    const { hotelId, hotelName, hotelAddress, hotelChainId } = hotelInfo;
+    const text = `INSERT INTO hotel(hotel_id, hotel_name, hotel_address, hotel_chain_id) VALUES($1, $2, $3, $4)`;
+    const values = [hotelId, hotelName, hotelAddress, hotelChainId];
+    return pool.query(text, values);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+export const addRoom = async (roomInfo: any) => {
+  try {
+    const { roomId, roomType, roomPrice, hotelId } = roomInfo;
+    const text = `INSERT INTO room(room_id, room_type, room_price, hotel_id) VALUES($1, $2, $3, $4)`;
+    const values = [roomId, roomType, roomPrice, hotelId];
     return pool.query(text, values);
   } catch (err) {
     console.log(err);

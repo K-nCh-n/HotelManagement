@@ -7,7 +7,8 @@ import Search from './pages/Search';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import Account from './pages/Account';
-import Employee from './pages/Employee';
+import EmployeePortal from './pages/EmployeePortal';
+import EmployeeReservations from './pages/EmployeeReservations';
 import RoomDetails from './pages/RoomDetails';
 import NotFound from './pages/NotFound';
 import useToken from './components/Token';
@@ -22,10 +23,11 @@ function App() {
           <Routes>
             <Route path="/" element={<Home isEmployee={isEmployee} />} />
             <Route path="/search" element={<Search />} />
-            <Route path="/employee" element={<Employee isEmployee={isEmployee} employeeNas={token} />} />
+            <Route path="employee" element={<EmployeePortal isEmployee={isEmployee} />}/>
+            <Route path="/employeeReservations" element={<EmployeeReservations isEmployee={isEmployee} employeeNas={token} />} />
             <Route path="/login" element={<Login setToken={setToken} setIsEmployee={setIsEmployee} />} />
             <Route path="/signup" element={<SignUp />} />
-            <Route path="/account" element={<Account token={token} />} />
+            <Route path="/account" element={<Account token={token} isEmployee={isEmployee} />} />
             <Route path="/room/:id" element={<RoomDetails token={token} />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

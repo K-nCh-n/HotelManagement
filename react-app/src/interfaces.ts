@@ -46,12 +46,17 @@ export interface IUserLogin {
 }
 
 export interface IUserInfo {
-  customerNas: string,
+  NAS: string,
   email: string,
   firstName: string,
   lastName: string,
   address: string,
   password: string,
+}
+
+export interface IEmployeeInfo extends IUserInfo {
+  hotelId: number,
+  yearlySalary: number,
 }
 
 export interface IReservation {
