@@ -6,9 +6,9 @@ import axios from "axios";
 import { IReservation, IUserInfo } from "../interfaces";
 import ReservationList from "../components/ReservationsList";
 import { useNavigate } from "react-router-dom";
-import ClientInfo from "../components/ClientInfo";
+import AccountInfo from "../components/AccountInfo";
 
-const Account = (props: {token: string}) => {
+const Account = (props: {token: string, isEmployee: boolean}) => {
   const [userInfo, setUserInfo] = useState<IUserInfo>({} as IUserInfo);
   const [reservations, setReservations] = useState<IReservation[]>([]);
   const navigate = useNavigate();
@@ -42,8 +42,17 @@ const Account = (props: {token: string}) => {
   const handleShow = () => setShowModal(true);
 
   const deleteUser = () => {
-    const deleteUrl = `http://csi2532.ddns.net:5000/deleteUser/${props.token}`;
-    axios.delete(deleteUrl).then(response => {
+    const deleteUrl = `http://csi2532.ddns.net:5000/deleteUser/`;
+    const body = {
+      data : {
+        "token": props.token,
+        "isEmployee": props.isEmployee
+      }
+    }
+    console.log(body);
+    axios.delete(deleteUrl, body).then(response => {
+      localStorage.removeItem("isEmployee");
+      localStorage.removeItem("token");
       console.log(response.data);
       alert("Your account has been deleted.");
       navigate('/');
@@ -67,7 +76,7 @@ const Account = (props: {token: string}) => {
   return (
     <Container fluid="lg" className="my-2 py-2 bg-light">
       {showEditInfo ?
-        <ClientInfo user={userInfo} setUserInfo={setUserInfo} setShowEditInfo={setShowEditInfo} />
+        <AccountInfo user={userInfo} setUserInfo={setUserInfo} setShowEditInfo={setShowEditInfo} isEmployee={props.isEmployee} />
         : 
         <Container>
             <Modal show={showModal} onHide={handleClose}>
@@ -95,12 +104,19 @@ const Account = (props: {token: string}) => {
                 </Card>
               </Col>
               <Col md="8">
+                {props.isEmployee ?
+                <Container>
+                  <h3>Add New Employee</h3>
+                  <AccountInfo isEmployee={true} />
+                </Container>
+                :
                 <Container>
                   <h3>
                     My Reservations
                   </h3>
-                  <ReservationList reservations={reservations} setReservations={setReservations}/>
+                  <ReservationList reservations={reservations} setReservations={setReservations} />
                 </Container>
+                }
               </Col>
             </Row>
         </Container>

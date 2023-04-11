@@ -5,7 +5,7 @@ import { IReservation, IReservationEmployee } from '../interfaces';
 import { AiOutlineSearch } from "react-icons/ai";
 import axios from 'axios';
 
-const Employee = (props: {isEmployee: boolean, employeeNas: string}) => {
+const EmployeeReservations = (props: {isEmployee: boolean, employeeNas: string}) => {
   const [reservations, setReservations] = useState<IReservationEmployee[]>([]);
   const [filteredReservations, setFilteredReservations] = useState<IReservationEmployee[]>([]);
   const [validated, setValidated] = useState(false);
@@ -194,4 +194,4 @@ const Employee = (props: {isEmployee: boolean, employeeNas: string}) => {
   );
 }
 
-export default Employee
+export default EmployeeReservations
