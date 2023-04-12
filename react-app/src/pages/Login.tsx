@@ -9,7 +9,7 @@ import { GoSignIn } from "react-icons/go";
 const Login = (props: { setToken: (token: string ) => void, setIsEmployee: (val: boolean) => void } ) => {
   const [userLogin, setUserLogin] = useState<IUserLogin>({} as IUserLogin );
   const [message, setMessage] = useState<string>("");
-  const loginUrl = "http://csi2532.ddns.net:5000/login";
+  const loginUrl = `http://${process.env.REACT_APP_BACKEND_BASEURL}/login`;
   const navigate = useNavigate();
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const form = event.currentTarget;
