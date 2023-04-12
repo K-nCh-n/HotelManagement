@@ -16,8 +16,8 @@ const Account = (props: {token: string, isEmployee: boolean}) => {
   useEffect(() => {
     const getDBInfo = () => {
       let ignore = false;
-      const userInfoUrl = `http://csi2532.ddns.net:5000/account/${props.token}`;
-      const reservationUrl = `http://csi2532.ddns.net:5000/userReservations/${props.token}`;
+      const userInfoUrl = `http://${process.env.REACT_APP_BACKEND_BASEURL}/account/${props.token}`;
+      const reservationUrl = `http://${process.env.REACT_APP_BACKEND_BASEURL}/userReservations/${props.token}`;
       if (!ignore) {
         try {
           axios.get(userInfoUrl).then(response => {
@@ -42,7 +42,7 @@ const Account = (props: {token: string, isEmployee: boolean}) => {
   const handleShow = () => setShowModal(true);
 
   const deleteUser = () => {
-    const deleteUrl = `http://csi2532.ddns.net:5000/deleteUser/`;
+    const deleteUrl = `http://${process.env.REACT_APP_BACKEND_BASEURL}/deleteUser/`;
     const body = {
       data : {
         "token": props.token,

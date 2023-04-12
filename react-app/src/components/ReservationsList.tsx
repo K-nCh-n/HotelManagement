@@ -6,7 +6,7 @@ import { useState } from "react";
 
 const ReservationList = (props: {reservations: (IReservation|IReservationEmployee)[], setReservations: (reservations: any[]) => void, employeeNas?: string}) => {
   const cancelReservation = (reservation: IReservation|IReservationEmployee) => {
-    const cancelReservationUrl = `http://csi2532.ddns.net:5000/cancelReservation/${reservation.reservationId}`;
+    const cancelReservationUrl = `http://${process.env.REACT_APP_BACKEND_BASEURL}/cancelReservation/${reservation.reservationId}`;
     axios.delete(cancelReservationUrl,).then(response => {
       console.log(response);
       props.setReservations(props.reservations.filter(res => res.reservationId !== reservation.reservationId));
@@ -14,7 +14,7 @@ const ReservationList = (props: {reservations: (IReservation|IReservationEmploye
     });
   }
   const confirmReservation = (reservation: IReservation|IReservationEmployee) => {
-    const confirmReservationUrl = `http://csi2532.ddns.net:5000/confirmReservation/${reservation.reservationId}/${props.employeeNas}`;
+    const confirmReservationUrl = `http://${process.env.REACT_APP_BACKEND_BASEURL}/confirmReservation/${reservation.reservationId}/${props.employeeNas}`;
     axios.put(confirmReservationUrl,).then(response => {
       console.log(response);
       props.setReservations(props.reservations.filter(res => res.reservationId !== reservation.reservationId));

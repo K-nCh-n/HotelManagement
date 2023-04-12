@@ -9,9 +9,9 @@ const AccountInfo = (props: { user?: IUserInfo|IEmployeeInfo, setShowEditInfo?: 
   const [formData, setFormData] = useState<IUserInfo|IEmployeeInfo>(props.user ?? {} as IUserInfo);
   const [validated, setValidated] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const signupUrl = "http://csi2532.ddns.net:5000/signup";
-  const editInfoUrl = "http://csi2532.ddns.net:5000/editaccountinfo";
-  const employeeSignUpUrl = "http://csi2532.ddns.net:5000/employeeSignUp";
+  const signupUrl = `http://${process.env.REACT_APP_BACKEND_BASEURL}/signup`;
+  const editInfoUrl = `http://${process.env.REACT_APP_BACKEND_BASEURL}/editaccountinfo`;
+  const employeeSignUpUrl = `http://${process.env.REACT_APP_BACKEND_BASEURL}/employeeSignUp`;
   const navigate = useNavigate();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {

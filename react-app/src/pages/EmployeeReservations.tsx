@@ -19,7 +19,7 @@ const EmployeeReservations = (props: {isEmployee: boolean, employeeNas: string})
   useEffect(() => {
     const getDBInfo = () => {
       let ignore = false;
-      const reservationUrl = "http://csi2532.ddns.net:5000/employeeReservations";
+      const reservationUrl = `http://${process.env.REACT_APP_BACKEND_BASEURL}/employeeReservations`;
       try {
         axios.get(reservationUrl).then(response => {
           if (!ignore) {
@@ -79,7 +79,7 @@ const EmployeeReservations = (props: {isEmployee: boolean, employeeNas: string})
       "newReservation": newReservation,
     };
 
-    const reservationUrl = "http://csi2532.ddns.net:5000/employeeCreateRental";
+    const reservationUrl = `http://${process.env.REACT_APP_BACKEND_BASEURL}/employeeCreateRental`;
     axios.post(reservationUrl, body).then(response => {
       console.log(response);
     });
