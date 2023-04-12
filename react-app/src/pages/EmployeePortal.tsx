@@ -15,10 +15,7 @@ const EmployeePortal = (props: {isEmployee: boolean}) => {
               <div className="position-absolute bottom-0 mb-3 w-100 start-0">
                 <div className="mb-2">
                   <Link to="/employeeReservations" className="btn btn-success rounded-pill px-3 py-2 mx-3">View Customer Reservations</Link>
-                </div>
-                <div>
                   <Link to="/editHotelInfo" className="btn btn-primary rounded-pill px-3 py-2 mx-3">Edit Hotel Information</Link>
-                  <Link to="/employeeSignUp" className="btn btn-info rounded-pill px-3 py-2 mx-3">Add New Employee</Link>
                 </div>
               </div>
             </Card.Footer>

@@ -1,5 +1,5 @@
 import { Pool } from 'pg';
-import { IEmployeeInfo, IReservationInfo, ISearchParams, IUserInfo } from './interfaces';
+import { IEmployeeInfo, IHotel, IReservationInfo, ISearchParams, IUserInfo } from './interfaces';
 import e from 'express';
 
 const pool = new Pool({
@@ -300,6 +300,16 @@ export const createEmployee = async (employeeInfo: IEmployeeInfo) => {
   }
 }
 
+export const getHotelChains = async () => {
+  try {
+    const text = `SELECT * FROM hotel_chain`;
+    return pool.query(text);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
 export const addHotelChain = async (hotelChainName: string) => {
   try {
     const text = `INSERT INTO hotel_chain(chain_name) VALUES($1)`;
@@ -311,11 +321,56 @@ export const addHotelChain = async (hotelChainName: string) => {
   }
 }
 
-export const addHotel = async (hotelInfo: any) => {
+export const deleteHotelChain = async (hotelChainName: string) => {
   try {
-    const { hotelId, hotelName, hotelAddress, hotelChainId } = hotelInfo;
-    const text = `INSERT INTO hotel(hotel_id, hotel_name, hotel_address, hotel_chain_id) VALUES($1, $2, $3, $4)`;
-    const values = [hotelId, hotelName, hotelAddress, hotelChainId];
+    const text = `DELETE FROM hotel_chain WHERE chain_name = $1`;
+    const values = [hotelChainName];
+    return pool.query(text, values);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+export const getHotels = async (chainName: string) => {
+  try {
+    const text = `SELECT * FROM hotel WHERE chain_name = $1`;
+    const values = [chainName];
+    return pool.query(text, values);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+export const addHotel = async (hotelInfo: IHotel) => {
+  try {
+    const { hotelId, chainName, email, phoneNumber, rating, zone, address } = hotelInfo;
+    const text = `INSERT INTO hotel(hotel_id, chain_name, email, phone_number, zone, address) VALUES($1, $2, $3, $4, $5, $6)`;
+    
+    const values = [hotelId, chainName, email, phoneNumber, zone, address];
+    return pool.query(text, values);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+export const deleteHotel = async (hotelId: string) => {
+  try {
+    const text = `DELETE FROM hotel WHERE hotel_id = $1`;
+    const values = [hotelId];
+    return pool.query(text, values);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+export const getRooms = async (hotelId: string) => {
+  try {
+    const text = `SELECT * FROM room WHERE hotel_id = $1`;
+    const values = [hotelId];
     return pool.query(text, values);
   } catch (err) {
     console.log(err);
@@ -325,9 +380,21 @@ export const addHotel = async (hotelInfo: any) => {
 
 export const addRoom = async (roomInfo: any) => {
   try {
-    const { roomId, roomType, roomPrice, hotelId } = roomInfo;
-    const text = `INSERT INTO room(room_id, room_type, room_price, hotel_id) VALUES($1, $2, $3, $4)`;
-    const values = [roomId, roomType, roomPrice, hotelId];
+    const { roomId, hotelId, price, commodities, capacity, view, extendable, problems, image } = roomInfo;
+    const text = `INSERT INTO room(room_id, hotel_id, price, commodities, capacity, view, extendable, problems, image)
+                  VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)`;
+    const values = [roomId, hotelId, price, commodities, capacity, view, extendable, problems, image];
+    return pool.query(text, values);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+export const deleteRoom = async (roomId: string) => {
+  try {
+    const text = `DELETE FROM room WHERE room_id = $1`;
+    const values = [roomId];
     return pool.query(text, values);
   } catch (err) {
     console.log(err);

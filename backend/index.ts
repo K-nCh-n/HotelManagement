@@ -2,8 +2,8 @@ import * as dotenv from 'dotenv';
 dotenv.config(); 
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
-import { ISearchParams, IUserInfo, IReservationEmployee, IReservation, IRoomAugmented, IUserLogin, IReservationInfo, IReservedDates, IEmployeeInfo } from './interfaces';
-import { search, createClientAcct, loginUser, accountInfo, userReservations, employeeReservations, cancelReservation, confirmReservation, deleteAccount, editAccountInfo, roomInfo, reserveRoom, getRoomAvailability, createEmployee } from './db';
+import { ISearchParams, IUserInfo, IReservationEmployee, IReservation, IRoomAugmented, IUserLogin, IReservationInfo, IReservedDates, IEmployeeInfo, IHotel, IRoom } from './interfaces';
+import { search, createClientAcct, loginUser, accountInfo, userReservations, employeeReservations, cancelReservation, confirmReservation, deleteAccount, editAccountInfo, roomInfo, reserveRoom, getRoomAvailability, createEmployee, getHotelChains, getHotels, getRooms, deleteRoom, deleteHotel, deleteHotelChain, addHotelChain, addHotel, addRoom } from './db';
 
 const app: Express = express();
 const port = 5000;
@@ -302,6 +302,142 @@ app.post('/employeeSignUp', async (req: Request, res: Response) => {
 });
 
 ///
+
+app.get('/getHotelChains', async (req: Request, res: Response) => {
+  try {
+    const result = await getHotelChains();
+    const hotelChainNames: string[] = result.rows.map((chain: any) => {
+      return chain.chain_name;
+    });
+    res.send(hotelChainNames);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error Getting Hotel Chains");
+  }
+});
+
+app.get('/getHotels/:chainName', async (req: Request, res: Response) => {
+  try {
+    const chainName = req.params.chainName;
+    const result = await getHotels(chainName);
+    const hotels: IHotel[] = result.rows.map((hotel: any) => {
+      return {
+        hotelId: hotel.hotel_id,
+        rating: hotel.rating,
+        hotelPhoneNumber: hotel.phone_number,
+        chainName: hotel.chain_name,
+        zone: hotel.zone,
+        address: hotel.address,
+        email: hotel.email,
+        phoneNumber: hotel.phone_number,
+        managerId: hotel.manager_id,
+      }
+    });
+    res.send(hotels);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error Getting Hotels");
+  }
+});
+
+app.get('/getRooms/:hotelId', async (req: Request, res: Response) => {
+  try {
+    const hotelId = req.params.hotelId;
+    const result = await getRooms(hotelId);
+    const rooms: IRoomAugmented[] = result.rows.map((room: any) => {
+      return {
+        roomId: room.room_id,
+        hotelId: room.hotel_id,
+        price: room.price,
+        commodities: room.commodities,
+        capacity: room.capacity,
+        view: room.view,
+        extendable: room.extendable,
+        problems: room.problems,
+        roomImage: room.image,
+        hotelName: `${room.chain_name} ${room.zone}`,
+        hotelAddress: room.address,
+        rating: room.rating,
+        hotelPhoneNumber: room.phone_number,
+        hotelChain: room.chain_name,
+      }
+    });
+    res.send(rooms);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error Getting Rooms");
+  }
+});
+
+app.delete('/deleteRoom/:roomId', async (req: Request, res: Response) => {
+  try {
+    const roomId = req.params.roomId;
+    const result = await deleteRoom(roomId);
+    res.send(roomId);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error Deleting Room");
+  }
+});
+
+app.delete('/deleteHotel/:hotelId', async (req: Request, res: Response) => {
+  try {
+    const hotelId = req.params.hotelId;
+    const result = await deleteHotel(hotelId);
+    res.send(hotelId);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error Deleting Hotel");
+  }
+});
+
+app.delete('/deleteHotelChain/:chainName', async (req: Request, res: Response) => {
+  try {
+    const chainName = req.params.chainName;
+    const result = await deleteHotelChain(chainName);
+    res.send(chainName);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error Deleting Hotel Chain");
+  }
+});
+
+app.post('/addHotelChain', async (req: Request, res: Response) => {
+  try {
+    const chainName = req.body.chainName;
+    const result = await addHotelChain(chainName);
+    res.send(chainName);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error Adding Hotel Chain");
+  }
+});
+
+app.post('/addHotel', async (req: Request, res: Response) => {
+  try {
+    const hotelInfo: IHotel = req.body;
+    console.log(hotelInfo);
+    hotelInfo.hotelId = Math.floor((Math.random() * 1000000) + 1);
+    const result = await addHotel(hotelInfo);
+    res.send(hotelInfo);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error Adding Hotel");
+  }
+});
+
+app.post('/addRoom', async (req: Request, res: Response) => {
+  try {
+    const roomInfo: IRoom = req.body;
+    console.log(roomInfo);
+    roomInfo.roomId = Math.floor((Math.random() * 1000000) + 1);
+    const result = await addRoom(roomInfo);
+    res.send(roomInfo);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error Adding Room");
+  }
+});
 
 app.post('/add', (req: Request, res: Response) => {
   res.send(req.body);
