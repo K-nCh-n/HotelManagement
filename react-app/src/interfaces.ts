@@ -23,7 +23,7 @@ export interface ISearchParams {
   location?: string,
 }
 
-export interface IRoomAugmented {
+export interface IRoom {
   roomId: number,
   hotelId: number,
   price: number,
@@ -32,6 +32,10 @@ export interface IRoomAugmented {
   view: string,
   extendable: boolean,
   problems: string,
+  image?: string,
+}
+
+export interface IRoomAugmented extends IRoom {
   hotelName: string,
   hotelAddress: string,
   rating: number,
@@ -92,4 +96,15 @@ export interface IReservationInfo {
 export interface IReservedDates {
   reservationStartDate: Date,
   reservationEndDate: Date,
+}
+
+export interface IHotel {
+  hotelId: number,
+  chainName: string,
+  email: string,
+  phoneNumber: string,
+  rating: number,
+  managerId: string,
+  zone: string,
+  address: string,
 }

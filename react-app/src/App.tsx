@@ -12,6 +12,7 @@ import EmployeeReservations from './pages/EmployeeReservations';
 import RoomDetails from './pages/RoomDetails';
 import NotFound from './pages/NotFound';
 import useToken from './components/Token';
+import EditHotelInfo from './pages/EditHotelInfo';
 
 function App() {
   const { token, setToken, isEmployee, setIsEmployee } = useToken();
@@ -25,6 +26,7 @@ function App() {
             <Route path="/search" element={<Search />} />
             <Route path="employee" element={<EmployeePortal isEmployee={isEmployee} />}/>
             <Route path="/employeeReservations" element={<EmployeeReservations isEmployee={isEmployee} employeeNas={token} />} />
+            <Route path="/editHotelInfo" element={<EditHotelInfo isEmployee={isEmployee} />} />
             <Route path="/login" element={<Login setToken={setToken} setIsEmployee={setIsEmployee} />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/account" element={<Account token={token} isEmployee={isEmployee} />} />
