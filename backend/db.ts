@@ -194,12 +194,19 @@ export const deleteAccount = async (id: string, isEmployee: boolean) => {
   }
 }
 
-export const editAccountInfo = async (userInfo: IUserInfo) => {
+export const editAccountInfo = async (accountInfo: IUserInfo | IEmployeeInfo, isEmployee: boolean) => {
   try{
-    const { firstName, lastName, address, email, password, NAS } = userInfo;
-    const text = `UPDATE customer SET first_name = $1, last_name = $2, address = $3, email = $4, password = $5 WHERE customer_nas = $6`;
-    const values = [firstName, lastName, address, email, password, NAS];
-    return pool.query(text, values);
+    if (isEmployee && 'hotelId' in accountInfo) {
+      const { firstName, lastName, address, email, password, NAS, hotelId } = accountInfo;
+      const text = `UPDATE employee SET first_name = $1, last_name = $2, address = $3, email = $4, password = $5, hotel_id = $6 WHERE employee_nas = $7`;
+      const values = [firstName, lastName, address, email, password, hotelId, NAS];
+      return pool.query(text, values);
+    } else {
+      const { firstName, lastName, address, email, password, NAS } = accountInfo;
+      const text = `UPDATE customer SET first_name = $1, last_name = $2, address = $3, email = $4, password = $5 WHERE customer_nas = $6`;
+      const values = [firstName, lastName, address, email, password, NAS];
+      return pool.query(text, values);
+    }
   } catch (err) {
     console.log(err);
     throw err;

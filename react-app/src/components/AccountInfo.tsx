@@ -27,32 +27,35 @@ const AccountInfo = (props: { user?: IUserInfo|IEmployeeInfo, setShowEditInfo?: 
     setValidated(true);
 
     let body: any;
-
-    if (props.isEmployee && "hotelId" in formData) {
-      body = {
-        "employeeInfo": formData,
-      };
-    } else {
-      body = {
-        "clientInfo": formData,
-      };
-    }
-    
     if (props.user) {
       body = {
-        "employeeInfo": formData,
-        "isEmployee": props.isEmployee,
+        "body": {
+          "accountInfo": formData,
+          "isEmployee": props.isEmployee
+        }
       }
       axios.post(editInfoUrl, body).then(response => {
         console.log(response.data);
         if (props.setShowEditInfo) props.setShowEditInfo(false);
         if (props.setUserInfo) props.setUserInfo(formData);
-      });
+      }).catch(error => {
+        console.log(error);
+        setErrorMessage(error.response.data);
+      });;
     } else if (props.isEmployee) {
+      body = {
+        "employeeInfo": formData,
+      };
       axios.post(employeeSignUpUrl, body).then(response => {
         console.log(response.data);
-      });
+      }).catch(error => {
+        console.log(error);
+        setErrorMessage(error.response.data);
+      });;
     } else {
+      body = {
+        "clientInfo": formData,
+      };
       axios.post(signupUrl, body).then(response => {
         console.log(response.data);
         navigate('/login');
@@ -158,6 +161,7 @@ const AccountInfo = (props: { user?: IUserInfo|IEmployeeInfo, setShowEditInfo?: 
         <Form.Group>
           <Button variant="primary rounded-pill px-3 py-2 my-2" type="submit">{props.isEmployee ? (props.user ? "Edit Account" : "Add New Employee") : (props.user ? "Save" : "Sign Up")}</Button>
         </Form.Group>
+        {errorMessage && <p className="text-danger">{errorMessage}</p>}
       </Form>
     </Container>
   );

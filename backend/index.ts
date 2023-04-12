@@ -205,10 +205,13 @@ app.delete('/deleteUser', async (req: Request, res: Response) => {
   }
 });
 
-app.post('/editaccountinfo', (req: Request, res: Response) => {
+app.post('/editaccountinfo', async (req: Request, res: Response) => {
   try {
-    const userInfo: IUserInfo = req.body;
-    const result = editAccountInfo(userInfo);
+    const body = req.body.body;
+    console.log(body);
+    const isEmployee: boolean = body.isEmployee;
+    const accountInfo: IUserInfo|IEmployeeInfo = body.accountInfo;
+    const result = await editAccountInfo(accountInfo, isEmployee);
     res.send("Edited");
   } catch (err) {
     console.log(err);
