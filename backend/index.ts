@@ -3,7 +3,7 @@ dotenv.config();
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import { ISearchParams, IUserInfo, IReservationEmployee, IReservation, IRoomAugmented, IUserLogin, IReservationInfo, IReservedDates, IEmployeeInfo, IHotel, IRoom } from './interfaces';
-import { search, createClientAcct, loginUser, accountInfo, userReservations, employeeReservations, cancelReservation, confirmReservation, deleteAccount, editAccountInfo, roomInfo, reserveRoom, getRoomAvailability, createEmployee, getHotelChains, getHotels, getRooms, deleteRoom, deleteHotel, deleteHotelChain, addHotelChain, addHotel, addRoom } from './db';
+import { search, createClientAcct, loginUser, accountInfo, userReservations, employeeReservations, cancelReservation, confirmReservation, deleteAccount, editAccountInfo, roomInfo, reserveRoom, getRoomAvailability, createEmployee, getHotelChains, getHotels, getRooms, deleteRoom, deleteHotel, deleteHotelChain, addHotelChain, addHotel, addRoom, getRoomCountByZone, getRoomCapacityInHotel, getHotelIds } from './db';
 
 const app: Express = express();
 const port = 5000;
@@ -437,6 +437,28 @@ app.post('/addRoom', async (req: Request, res: Response) => {
     console.log(err);
     res.status(500).send("Error Adding Room");
   }
+});
+
+app.get('/roomCountByZone', async (req: Request, res: Response) => {
+  try {
+    const result = await getRoomCountByZone();
+    console.log(result.rows);
+    res.send(result.rows);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error Getting Room Count By Zone");
+  }
+});
+
+app.get('/roomCapacityInHotel', async (req: Request, res: Response) => {
+  try {
+    const result = await getRoomCapacityInHotel();
+    console.log(result.rows);
+    res.send(result.rows);
+    } catch (err) {
+      console.log(err);
+      res.status(500).send("Error Getting Room Capacity In Hotel");
+    }
 });
 
 app.post('/add', (req: Request, res: Response) => {

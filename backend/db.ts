@@ -401,3 +401,33 @@ export const deleteRoom = async (roomId: string) => {
     throw err;
   }
 }
+
+export const getRoomCountByZone = async () => {
+  try {
+    const text = `SELECT * FROM room_count_by_zone`;
+    return pool.query(text);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+export const getRoomCapacityInHotel = async () => {
+  try {
+    const text = `SELECT * FROM room_capacity_by_hotel`;
+    return pool.query(text);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+export const getHotelIds = async () => {
+  try {
+    const text = `SELECT hotel_id FROM hotel`;
+    return pool.query(text);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}

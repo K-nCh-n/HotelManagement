@@ -28,6 +28,9 @@ const NavigationBar = (props: {token: string}) => {
             <Nav.Item className="px-2">
               <NavLink to="/search" className={({ isActive }) => 'nav-link ' + (isActive && 'active')}>Search</NavLink>
             </Nav.Item>
+            <Nav.Item>
+              <NavLink to="/views" className={({ isActive }) => 'nav-link ' + (isActive && 'active')}>Views</NavLink>
+            </Nav.Item>
           </Nav>
           <Nav className="ms-auto">
             {props.token ?
