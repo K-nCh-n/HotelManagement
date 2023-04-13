@@ -63,6 +63,7 @@ CREATE TABLE customer (
     registration_date date,
     email varchar,
     password varchar,
+    phone_number varchar
     PRIMARY KEY (customer_nas)
 );
 
@@ -72,6 +73,7 @@ CREATE TABLE reservation (
     customer_nas character varying(20),
     reservation_start_date date,
     reservation_end_date date,
+    reservation_date date,
     PRIMARY KEY (reservation_id),
     FOREIGN KEY (room_id) REFERENCES room(room_id),
     FOREIGN KEY (customer_nas) REFERENCES customer(customer_nas)
@@ -79,19 +81,21 @@ CREATE TABLE reservation (
 
 CREATE TABLE rental (
     rental_id character varying(20) NOT NULL,
-    reservation_id character varying(20),
     customer_nas character varying(20),
     room_id varchar NOT NULL,
     rental_start_date date,
     rental_end_date date,
     number_of_people integer,
-    employee_nas character varying(20),
     PRIMARY KEY (rental_id),
-    FOREIGN KEY (reservation_id) REFERENCES reservation(reservation_id),
     FOREIGN KEY (customer_nas) REFERENCES customer(customer_nas),
     FOREIGN KEY (room_id) REFERENCES room(room_id),
-    FOREIGN KEY (employee_nas) REFERENCES employee(employee_nas)
 );
 
-ALTER TABLE hotel
-	ADD FOREIGN KEY (manager_id) REFERENCES employee(employee_nas)
+CREATE TABLE confirmation (
+	reservation_id varchar NOT NULL,
+	rental_id varchar NOT NULL,
+	employee_nas varchar NULL,
+	FOREIGN KEY (reservation_id) REFERENCES reservation(reservation_id),
+	FOREIGN KEY (rental_id) REFERENCES rental(rental_id),
+	FOREIGN KEY (employee_nas) REFERENCES employee(employee_nas)
+);
