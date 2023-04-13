@@ -13,6 +13,7 @@ import RoomDetails from './pages/RoomDetails';
 import NotFound from './pages/NotFound';
 import useToken from './components/Token';
 import EditHotelInfo from './pages/EditHotelInfo';
+import Views from './pages/Views';
 
 function App() {
   const { token, setToken, isEmployee, setIsEmployee } = useToken();
@@ -31,6 +32,7 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/account" element={<Account token={token} isEmployee={isEmployee} />} />
             <Route path="/room/:id" element={<RoomDetails token={token} />} />
+            <Route path="/views" element={<Views />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
